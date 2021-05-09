@@ -19,9 +19,9 @@ HTTP_AUTH_HEADERS: AUTH_TOKEN
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
 ```json
 {
-  'title': 'Your Title',
-  'QuestionText': 'Your QuestionText',
-  'keywords': [
+  title: 'Your Title',
+  QuestionText: 'Your QuestionText',
+  keywords: [
       'Keyword 1',
       'Keyword 2',
       ...,
@@ -32,16 +32,16 @@ HTTP_AUTH_HEADERS: AUTH_TOKEN
 
 * Success Response: 
     * Code: `200`
-    * Content: `{ 'id': YOUR_QUESTIONS_ID }`
+    * Content: `{ id: YOUR_QUESTIONS_ID }`
 
 * Error Response: 
     * Code: `400 Bad Request`
-    * Content: `{ 'error': 'Question title should be unique' }`
+    * Content: `{ error: 'Question title should be unique' }`
 
     OR
 
     * Code: `401 UNAUTHORIZED`
-    * Content: `{ 'error': 'You need to be authorized to create a new question' }`
+    * Content: `{ error: 'You need to be authorized to create a new question' }`
 
 
 * Notes:
@@ -62,14 +62,14 @@ Question title should be unique, otherwise a 400 Bad Request.
     * Content: 
     ```json
     {
-        'id': QUESTIONS_ID,
-        'title': QUESTIONS_TITLE,
-        'QuestionText': QUESTIONS_TEXT,
-        'DateAsked': QUESTIONS_DATE,
-        'UserID': {
-            'Email': USERS_EMAIL
+        id: QUESTIONS_ID,
+        title: QUESTIONS_TITLE,
+        QuestionText: QUESTIONS_TEXT,
+        DateAsked: QUESTIONS_DATE,
+        UserID: {
+            email: USERS_EMAIL
         },
-        'Answers': [
+        Answers: [
             ANSWER1,
             ANSWER2,
             ...,
@@ -80,7 +80,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 
 * Error Response: 
     * Code: `400 Bad Request`
-    * Content: `{ 'error': 'No question with such id' }`
+    * Content: `{ error: 'No question with such id' }`
 
 ### Answer question
 * URL: `/answer-question/`
@@ -89,23 +89,23 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
 ```json
 {
-  'questionID': 'Question\'s id',
-  'AnswerText': 'Your AnswerText'
+  questionID: 'Question\'s id',
+  AnswerText: 'Your AnswerText'
 }
 ```
 
 * Success Response: 
     * Code: `200`
-    * Content: `{ 'id': YOUR_ANSWERS_ID }`
+    * Content: `{ id: YOUR_ANSWERS_ID }`
 
 * Error Response: 
     * Code: `400 Bad Request`
-    * Content: `{ 'error': 'Something went wrong...' }`
+    * Content: `{ error: 'Something went wrong...' }`
 
     OR
 
     * Code: `401 UNAUTHORIZED`
-    * Content: `{ 'error': 'You need to be authorized to create a new question' }`
+    * Content: `{ error: 'You need to be authorized to create a new question' }`
 
 ### Get questions (based on filters)
 * URL: `/get-questions/`
@@ -114,15 +114,15 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
 ```json
 {
-  'keywords': [
+  keywords: [
       'keyword 1',
       'keyword 2',
       ...,
       'keyword N'
   ],
-  'date_from': 'YYYY-MM-DD',
-  'date_to': 'YYYY-MM-DD',
-  'from_user': USERS_ID
+  date_from: 'YYYY-MM-DD',
+  date_to: 'YYYY-MM-DD',
+  from_user: USERS_ID
 }
 ```
 
@@ -131,19 +131,19 @@ Question title should be unique, otherwise a 400 Bad Request.
     * Content: 
     ```json
     {
-        'questions': [
+        questions: [
             {
-                'id': 'Question 1 id'
-                'title': 'Question 1 Title'
+                id: 'Question 1 id'
+                title: 'Question 1 Title'
             },
             {
-                'id': 'Question 2 id'
-                'title': 'Question 2 Title'
+                id: 'Question 2 id'
+                title: 'Question 2 Title'
             },
             ...,
             {
-                'id': 'Question N id'
-                'title': 'Question N Title'
+                id: 'Question N id'
+                title: 'Question N Title'
             }
         ]
     }
@@ -151,7 +151,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 
 * Error Response: 
     * Code: `400 Bad Request`
-    * Content: `{ 'error': 'Something went wrong...' }`
+    * Content: `{ error: 'Something went wrong...' }`
 
 ### Sign-up
 
