@@ -6,7 +6,7 @@ This markdown file provides documentation regarding the API calls that can be ma
 ## Authentication
 
 To make API calls that **require authentication**, you need to fill in the request the following header, with your authentication token:
-```json
+```javascript
 HTTP_AUTH_HEADERS: AUTH_TOKEN
 ```
 
@@ -17,7 +17,7 @@ HTTP_AUTH_HEADERS: AUTH_TOKEN
 * Method: `POST`
 * Requires Authentication: **YES**
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
-```json
+```javascript
 {
   title: 'Your Title',
   QuestionText: 'Your QuestionText',
@@ -60,7 +60,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Success Response: 
     * Code: `200`
     * Content: 
-    ```json
+    ```javascript
     {
         id: QUESTIONS_ID,
         title: QUESTIONS_TITLE,
@@ -87,7 +87,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Method: `POST`
 * Requires Authentication: **YES**
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
-```json
+```javascript
 {
   questionID: 'Question\'s id',
   AnswerText: 'Your AnswerText'
@@ -112,7 +112,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Method: `POST`
 * Requires Authentication: **NO**
 * Data Params: In the body of the POST request, fill in the following fields of the following json:
-```json
+```javascript
 {
   keywords: [
       'keyword 1',
@@ -129,7 +129,7 @@ Question title should be unique, otherwise a 400 Bad Request.
 * Success Response: 
     * Code: `200`
     * Content: 
-    ```json
+    ```javascript
     {
         questions: [
             {
