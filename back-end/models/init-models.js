@@ -1,16 +1,16 @@
-var DataTypes = require("sequelize").DataTypes;
-var _User = require("./User");
-var _answer = require("./answer");
-var _keyword = require("./keyword");
-var _keyword_question = require("./keyword_question");
-var _question = require("./question");
+let DataTypes = require("sequelize").DataTypes;
+let _User = require("./User");
+let _answer = require("./answer");
+let _keyword = require("./keyword");
+let _keyword_question = require("./keyword_question");
+let _question = require("./question");
 
 function initModels(sequelize) {
-  var User = _User(sequelize, DataTypes);
-  var answer = _answer(sequelize, DataTypes);
-  var keyword = _keyword(sequelize, DataTypes);
-  var keyword_question = _keyword_question(sequelize, DataTypes);
-  var question = _question(sequelize, DataTypes);
+  let User = _User(sequelize, DataTypes);
+  let answer = _answer(sequelize, DataTypes);
+  let keyword = _keyword(sequelize, DataTypes);
+  let keyword_question = _keyword_question(sequelize, DataTypes);
+  let question = _question(sequelize, DataTypes);
 
   keyword.belongsToMany(question, { as: 'questions', through: keyword_question, foreignKey: "keywordid", otherKey: "questionid" });
   question.belongsToMany(keyword, { as: 'keywords', through: keyword_question, foreignKey: "questionid", otherKey: "keywordid" });
