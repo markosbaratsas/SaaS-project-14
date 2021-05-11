@@ -1,0 +1,134 @@
+@import url('standard.css');
+
+.total-wrapper {
+    min-height: 100vh;
+    background-color: #10141c;
+}
+
+.main-page-body {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 200px);
+}
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*position: fixed;*/
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #080e18;
+    color: #d2d2d2;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    height: 200px;
+}
+
+.footer a {
+    margin: 5px;
+}
+
+.title h1 {
+    color: #d2d2d2;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+.sign-button {
+    border-radius: 40px;
+    background-image: linear-gradient(90deg, rgba(73,195,204,1) 0%, rgba(52,171,200,1) 100%);
+    border: 0px;
+    color: #d2d2d2;
+    transition: transform 0.7s;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    width: 200px;
+    padding: 10px 10px;
+    position: fixed;
+    right: 50px;
+}
+
+.sign-button:hover {
+    transform: translateY(-5px);
+}
+
+.title-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 50px;
+    height: 20vh;
+}
+
+.welcome-text {
+    color: #d2d2d2;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.choice-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: #080e18 5px 5px 5px;
+    width: 300px;
+    background-color: #151a24;
+    color: #d2d2d2;
+    height: 350px;
+    border-radius: 10px;
+    transition: transform 0.5s;
+    margin: 20px;
+}
+
+.choice-box:hover {
+    transform: translateY(-15px);
+}
+
+.choice-box h2 {
+    color: #d2d2d2;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.choices-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.choice-icon {
+    height: 40%;
+    margin-bottom: 50px;
+}
+
+.sign-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: #080e18 5px 5px 5px;
+    width: 30%;
+    background-color: #151a24;
+    color: #d2d2d2;
+    min-height: 40%;
+    border-radius: 10px;
+    margin-bottom: 20vh;
+}
+
+.sign-page-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+}
