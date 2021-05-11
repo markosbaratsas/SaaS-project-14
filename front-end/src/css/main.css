@@ -40,7 +40,7 @@
 .sign-button {
     border-radius: 40px;
     background-image: linear-gradient(90deg, rgba(73,195,204,1) 0%, rgba(52,171,200,1) 100%);
-    border: 0px;
+    border: 0;
     color: #d2d2d2;
     transition: transform 0.7s;
     font-family: 'Roboto', sans-serif;
@@ -131,4 +131,132 @@
     align-items: center;
     justify-content: center;
     height: 80vh;
+}
+
+.sign-box form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 30px 0;
+}
+
+.input-div {
+    color: #a2a2a2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 10px;
+    width: 70%;
+}
+
+.input-div input {
+    background-color: #080e18;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    border: 0;
+    -webkit-transition : border 500ms ease-out;
+    -moz-transition : border 500ms ease-out;
+    -o-transition : border 500ms ease-out;
+    transition : border 500ms ease-out;
+}
+
+.input-div input:focus {
+    outline: none;
+    border: solid #49C3CC 1px;
+    /*transition: 1s;*/
+}
+
+.sign-button-form {
+    border-radius: 40px;
+    background-image: linear-gradient(90deg, rgb(73, 195, 204) 0%, rgb(52, 171, 200) 100%);
+    border: 0;
+    color: #d2d2d2;
+    transition: transform 0.7s;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    width: 200px;
+    padding: 10px 10px;
+    margin-top: 5%;
+}
+
+.sign-button-form:hover {
+    transform: translateY(-5px);
+}
+
+section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1;
+}
+
+section .wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg);
+    background-size: 100% 100%;
+}
+
+section .wave.wave1 {
+    animation: animate 60s linear infinite;
+    z-index: -1;
+    opacity: 0.5;
+    animation-delay: 0s;
+    bottom: 0;
+}
+
+section .wave.wave2 {
+    animation: animate2 45s linear infinite;
+    z-index: -2;
+    opacity: 0.25;
+    animation-delay: -5s;
+    bottom: 10px;
+}
+
+@keyframes animate {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 500px;
+    }
+}
+
+@keyframes animate2 {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: -1000px;
+    }
+}
+
+.sign-box h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 20px;
+}
+
+.link {
+    margin-left: 5px;
+    color: #49C3CC;
+}
+
+.link:hover, .link:active {
+    text-decoration: none;
+    color: #49C3CC;
 }
