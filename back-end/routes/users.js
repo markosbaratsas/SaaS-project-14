@@ -24,15 +24,16 @@ function checkErrors(email, password, password2) {
         errors.push({ message: "Please enter all fields" });
     }
 
-    if (password.length < 6) {
+    if (password && password.length < 6) {
         errors.push({ message: "Password must be a least 6 characters long" });
     }
 
-    if (password !== password2) {
+
+    if (password && password2 && password !== password2) {
         errors.push({ message: "Passwords do not match" });
     }
 
-    if (!validEmail(email)) {
+    if (email && !validEmail(email)) {
         errors.push({ message: "Please enter a valid email" });
     }
 
@@ -41,8 +42,6 @@ function checkErrors(email, password, password2) {
 }
 
 passport.use('signIn', new LocalStrategy(function(email, password, done) {
-    console.log("hello");
-    console.log(email, password);
     pool.query(
         `SELECT * FROM "User" WHERE email = $1`,
         [email],
@@ -83,7 +82,7 @@ passport.use('token', new JWTStrategy(
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
     },
     function(token, done) {
-        return done(null, { username: token.email });
+        return done(null, { email: token.email });
     }
 ));
 
@@ -91,7 +90,7 @@ router.post('/sign-in',
     passport.authenticate('signIn', {session: false}),
     function(req, res, next) {
         res.json({
-            token: jwt.sign(req.user, process.env.JWT_SECRET, { expiresIn: 20})
+            token: jwt.sign(req.user, process.env.JWT_SECRET, { expiresIn: 360000})
         });
     }
 );
@@ -132,7 +131,7 @@ router.post('/sign-up',async function(req, res, next) {
                         (err, results) => {
                             if (err) {
                                 console.log(err);
-                                res.json({ error: "Somehting went wrong..." });
+                                res.json({ error: "Something went wrong..." });
                             }
                             else {
                                 console.log(results.rows);
@@ -149,7 +148,7 @@ router.post('/sign-up',async function(req, res, next) {
 router.get('/test-user',
     passport.authenticate('token', { session: false }),
     function(req, res, next) {
-        res.json({ email: req.user.username });
+        res.json({ email: req.user.email });
     }
 );
 
