@@ -5,9 +5,6 @@ const bcrypt = require("bcrypt");
 const { pool } = require("../config/database");
 
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-
-const jwt = require('jsonwebtoken');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
@@ -52,7 +49,8 @@ router.post('/create-question/',
                                 if (err) {
                                     console.log(err);
                                 } else if (results.rows.length > 0) {
-                                    return res.json({message: "Question already asked"});
+                                    res.status(400);
+                                    return res.json({ error: 'Question title should be unique' });
                                 } else {
                                     pool.query(
                                         `INSERT INTO "question" (title, QuestionText, DateAsked, UserID)
@@ -62,6 +60,7 @@ router.post('/create-question/',
                                         (err, results) => {
                                             if (err) {
                                                 console.log(err);
+                                                res.status(400);
                                                 res.json({error: "Something went wrong..."});
                                             } else {
                                                 let question_id = results.rows[0]['id'];
@@ -82,6 +81,7 @@ router.post('/create-question/',
                                                                     (err, result) => {
                                                                         if (err) {
                                                                             keywords_added = false;
+                                                                            res.status(400);
                                                                             res.json({error: "Something went wrong..."});
                                                                         }
                                                                     }
@@ -105,11 +105,13 @@ router.post('/create-question/',
                                                                                     if (err) {
                                                                                         console.log(err);
                                                                                         keywords_added = false;
+                                                                                        res.status(400);
                                                                                         res.json({error: "Something went wrong..."});
                                                                                     }
                                                                                 }
                                                                             );
                                                                         } else {
+                                                                            res.status(400);
                                                                             res.json({error: "Something went wrong..."});
                                                                         }
                                                                     }
@@ -119,7 +121,10 @@ router.post('/create-question/',
                                                     )
                                                 }
                                                 if (keywords_added) res.json({success: "Successfully added question " + String(results.rows[0]['title'])});
-                                                else res.json({error: "Something went wrong..."});
+                                                else {
+                                                    res.status(400);
+                                                    res.json({error: "Something went wrong..."});
+                                                }
                                             }
                                         }
                                     );
@@ -132,7 +137,62 @@ router.post('/create-question/',
         }
 });
 
-
+router.get('/get-question-and-answers/:id',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let question_id = req.params.id;
+        pool.query(
+            `SELECT * FROM "question" WHERE id = $1`,
+            [question_id],
+            (err, results) => {
+                if(err) {
+                    res.status(400);
+                    return res.json( { error: 'Something went wrong...' } );
+                }
+                else if (results.rows.length > 0 ) {
+                    let title = results.rows[0]['title'];
+                    let question_text = results.rows[0]['questiontext'];
+                    let date_asked = results.rows[0]['dateasked'];
+                    let user_id = results.rows[0]['userid'];
+                    pool.query(
+                        `SELECT email FROM "User" WHERE id = $1`,
+                        [user_id],
+                        (err, results) => {
+                            if(err) {
+                                res.status(400);
+                                return res.json({error: 'Something went wrong...'});
+                            }
+                            else {
+                                let user_email = results.rows[0]['email'];
+                                pool.query(
+                                    `SELECT * FROM "answer" WHERE questionid = $1`,
+                                    [question_id],
+                                    (err, results) => {
+                                        if(err) {
+                                            res.status(400);
+                                            return res.json({error: 'Something went wrong...'});
+                                        }
+                                        else {
+                                            let answers = [];
+                                            for( let i = 0; i < results.rows.length; i++){
+                                                answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateasked'], user: results.rows[i]['userid']})
+                                            }
+                                            return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Answers: answers } )
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
+                else {
+                    res.status(400);
+                    return res.json( { error: 'No question with such id' } );
+                }
+            }
+        )
+    }
+)
 
 
 module.exports = router;
