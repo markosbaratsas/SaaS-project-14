@@ -30,7 +30,10 @@ router.post('/create-question/',
         let QuestionText = req.body['QuestionText'];
         let keywords = req.body['keywords'] === undefined ? [] : req.body['keywords'];
         let DateAsked = Date.now();
-        if (!title || !QuestionText) res.json({error: "Please provide all fields"});
+        if (!title || !QuestionText){
+            res.status(400);
+            return res.json({error: "Please provide all fields"});
+        }
         else {
             const email = String(req.user.email);
             pool.query(
@@ -39,7 +42,7 @@ router.post('/create-question/',
                 (err, results) => {
                     if (err) {
                         console.log(err);
-                        res.json({error: "Something went wrong..."});
+                        return res.json({error: "Something went wrong..."});
                     } else {
                         let UserID = results.rows[0]['id'];
                         pool.query(
@@ -61,7 +64,7 @@ router.post('/create-question/',
                                             if (err) {
                                                 console.log(err);
                                                 res.status(400);
-                                                res.json({error: "Something went wrong..."});
+                                                return res.json({error: "Something went wrong..."});
                                             } else {
                                                 let question_id = results.rows[0]['id'];
                                                 let keywords_added = true;
@@ -82,7 +85,7 @@ router.post('/create-question/',
                                                                         if (err) {
                                                                             keywords_added = false;
                                                                             res.status(400);
-                                                                            res.json({error: "Something went wrong..."});
+                                                                            return res.json({error: "Something went wrong..."});
                                                                         }
                                                                     }
                                                                 );
@@ -106,13 +109,13 @@ router.post('/create-question/',
                                                                                         console.log(err);
                                                                                         keywords_added = false;
                                                                                         res.status(400);
-                                                                                        res.json({error: "Something went wrong..."});
+                                                                                        return res.json({error: "Something went wrong..."});
                                                                                     }
                                                                                 }
                                                                             );
                                                                         } else {
                                                                             res.status(400);
-                                                                            res.json({error: "Something went wrong..."});
+                                                                            return res.json({error: "Something went wrong..."});
                                                                         }
                                                                     }
                                                                 );
@@ -123,7 +126,7 @@ router.post('/create-question/',
                                                 if (keywords_added) res.json({success: "Successfully added question " + String(results.rows[0]['title'])});
                                                 else {
                                                     res.status(400);
-                                                    res.json({error: "Something went wrong..."});
+                                                    return res.json({error: "Something went wrong..."});
                                                 }
                                             }
                                         }
@@ -194,5 +197,64 @@ router.get('/get-question-and-answers/:id',
     }
 )
 
+router.post('/answer-question/',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let question_id = req.body['questionID'];
+        let answer_text = req.body['AnswerText'];
+        let date_answered = Date.now();
+        if (!question_id || !answer_text) {
+            res.status(400);
+            return res.json({error: "Please provide all fields"});
+        }
+        else {
+            pool.query(
+                `SELECT * FROM "question" WHERE id = $1`,
+                [question_id],
+                (err, results) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(400);
+                        return res.json({error: "Something went wrong..."});
+                    }
+                    else if (results.rows.length > 0) {
+                        const email = String(req.user.email);
+                        pool.query(
+                            `SELECT id FROM "User" WHERE email = $1`,
+                            [email],
+                            (err, results) => {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(400);
+                                    return res.json({error: "Something went wrong..."});
+                                } else {
+                                    let user_id = results.rows[0]['id'];
+                                    pool.query(
+                                        `INSERT INTO "answer" (answertext, dateanswered, userid, questionid)
+                                    VALUES ($1, to_timestamp($2/ 1000.0), $3, $4)
+                                    RETURNING id`,
+                                        [answer_text, date_answered, user_id, question_id],
+                                        (err, results) => {
+                                            if (err) {
+                                                console.log(err);
+                                                res.status(400);
+                                                res.json({error: "Something went wrong..."});
+                                            } else {
+                                                return res.json( { id: results.rows[0]['id'] } )
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        );
+                    }
+                    else {
+                        res.status(400);
+                        return res.json({error: "No question with id = " + String(question_id)});
+                    }
+                }
+            )
+        }
+    })
 
 module.exports = router;
