@@ -261,10 +261,19 @@ router.post('/get-questions/',
     passport.authenticate('token', { session: false }),
     function(req, res, next) {
         let keywords = req.body['keywords'];
-        let date_from = (new Date(String(req.body['date_from']))).getTime() > 0 ? (new Date(String(req.body['date_from']))).getTime() : 0o000000000000;
-        let date_to = (new Date(String(req.body['date_to']))).getTime() > 0 ? (new Date(String(req.body['date_to']))).getTime() : 9999999999999;
+        let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))).getTime() : 0o000000000000;
+        let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))).getTime() : 9999999999999;
+        console.log(date_from)
+        if (!(date_from >= 0)) {
+            res.status(400);
+            return res.json({error: "Please provide a valid date_from format..." });
+        }
+        if (!(date_to > 0)) {
+            res.status(400);
+            return res.json({error: "Please provide a valid date_to format..." });
+        }
         let user_id = req.body['from_user'];
-        if (!keywords || !date_from || !date_to || !user_id) {
+        if (!keywords || !user_id) {
             res.status(400);
             return res.json({ error: "Please provide all fields" });
         }
