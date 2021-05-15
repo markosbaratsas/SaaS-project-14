@@ -231,8 +231,8 @@ router.post('/answer-question/',
                                     let user_id = results.rows[0]['id'];
                                     pool.query(
                                         `INSERT INTO "answer" (answertext, dateanswered, userid, questionid)
-                                    VALUES ($1, to_timestamp($2/ 1000.0), $3, $4)
-                                    RETURNING id`,
+                                            VALUES ($1, to_timestamp($2/ 1000.0), $3, $4)
+                                            RETURNING id`,
                                         [answer_text, date_answered, user_id, question_id],
                                         (err, results) => {
                                             if (err) {
@@ -251,6 +251,87 @@ router.post('/answer-question/',
                     else {
                         res.status(400);
                         return res.json({error: "No question with id = " + String(question_id)});
+                    }
+                }
+            )
+        }
+    })
+
+router.post('/get-questions/',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let keywords = req.body['keywords'];
+        let date_from = (new Date(String(req.body['date_from']))).getTime() > 0 ? (new Date(String(req.body['date_from']))).getTime() : 0o000000000000;
+        let date_to = (new Date(String(req.body['date_to']))).getTime() > 0 ? (new Date(String(req.body['date_to']))).getTime() : 9999999999999;
+        let user_id = req.body['from_user'];
+        if (!keywords || !date_from || !date_to || !user_id) {
+            res.status(400);
+            return res.json({ error: "Please provide all fields" });
+        }
+        else {
+            pool.query(
+                `SELECT FROM "User" WHERE id = $1`,
+                [user_id],
+                (err, results) => {
+                    if(err) {
+                        res.status(400);
+                        return res.json({error: "Something went wrong..." });
+                    }
+                    else if (results.rows.length > 0) {
+                        let query_string = `(SELECT * FROM (`;
+                        let first = true;
+                        for( let i = 0; i < keywords.length; i++) {
+                            if(first) {
+                                first = false;
+                                query_string += `SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
+                            }
+                            else query_string += ` UNION ALL SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
+                        }
+                        query_string += `
+                         INTERSECT ALL
+                                        SELECT id FROM "question" WHERE dateasked > to_timestamp(${date_from}/ 1000.0) 
+                                        AND dateasked < to_timestamp(${date_to}/ 1000.0))ss
+                                        GROUP BY questionid
+                                        ORDER BY COUNT(*) DESC)
+                                        `
+                        // console.log(query_string)
+                        pool.query(
+                            query_string,
+                            [],
+                            async (err, results) => {
+                                if(err) {
+                                    res.status(400);
+                                    return res.json({error: "Something went wrong..." });
+                                }
+                                else {
+                                    //
+                                    let questions = [];
+                                    let questions_added = 0;
+                                    let total_questions = results.rows.length;
+                                    for( let i = 0; i < results.rows.length; i++) {
+                                         await pool.query(
+                                            `SELECT * FROM "question" WHERE id = $1`,
+                                            [results.rows[i]['questionid']],
+                                            async (err, results) => {
+                                                if(err) {
+                                                    res.status(400);
+                                                    res.json({error: "Something went wrong..." });
+                                                }
+                                                else {
+                                                    // console.log({ id: results.rows[0]['id'], title: results.rows[0]['title']})
+                                                    await questions.push({ id: results.rows[0]['id'], title: results.rows[0]['title']});
+                                                    if(++questions_added === total_questions) res.json( {questions: questions});
+                                                }
+                                            }
+                                        )
+                                    }
+                        //
+                                }
+                            }
+                        )
+                    } else {
+                        res.status(400);
+                        return res.json({error: "No user with id = " + String(user_id)});
                     }
                 }
             )
