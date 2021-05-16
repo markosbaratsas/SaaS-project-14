@@ -263,7 +263,6 @@ router.post('/get-questions/',
         let keywords = req.body['keywords'] ? req.body['keywords'] : [];
         let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))).getTime() : 0o000000000000;
         let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))).getTime() : 9999999999999;
-        console.log(date_from)
         if (!(date_from >= 0)) {
             res.status(400);
             return res.json({error: "Please provide a valid date_from format..." });
@@ -273,85 +272,81 @@ router.post('/get-questions/',
             return res.json({error: "Please provide a valid date_to format..." });
         }
         let user_id = req.body['from_user'];
-        if (!user_id) {
-            res.status(400);
-            return res.json({ error: "Please provide all fields" });
-        }
-        else {
+        if(user_id) {
             pool.query(
-                `SELECT FROM "User" WHERE id = $1`,
+                `SELECT * FROM "User" WHERE id = $1`,
                 [user_id],
                 (err, results) => {
-                    if(err) {
+                    if (err) {
                         res.status(400);
-                        return res.json({error: "Something went wrong..." });
-                    }
-                    else if (results.rows.length > 0) {
-                        let query_string = ``;
-                        if (keywords.length !== 0) {
-                            query_string += `(SELECT * FROM (`;
-                            let first = true;
-                            for( let i = 0; i < keywords.length; i++) {
-                                if(first) {
-                                    first = false;
-                                    query_string += `SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
-                                }
-                                else query_string += ` UNION ALL SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
-                            }
-                            query_string += `
-                         INTERSECT ALL
-                                        SELECT id as questionid FROM "question" WHERE dateasked > to_timestamp(${date_from}/ 1000.0) 
-                                        AND dateasked < to_timestamp(${date_to}/ 1000.0))ss
-                                        GROUP BY questionid
-                                        ORDER BY COUNT(*) DESC)
-                                        `
-                        }
-                        else {
-                            query_string = `SELECT id as questionid FROM "question" WHERE dateasked > to_timestamp(${date_from}/ 1000.0) 
-                                        AND dateasked < to_timestamp(${date_to}/ 1000.0)`;
-                        }
-                        // console.log(query_string)
-                        pool.query(
-                            query_string,
-                            [],
-                            async (err, results) => {
-                                if(err) {
-                                    res.status(400);
-                                    return res.json({error: "Something went wrong..." });
-                                }
-                                else {
-                                    //
-                                    let questions = [];
-                                    let questions_added = 0;
-                                    let total_questions = results.rows.length;
-                                    for( let i = 0; i < results.rows.length; i++) {
-                                         await pool.query(
-                                            `SELECT * FROM "question" WHERE id = $1`,
-                                            [results.rows[i]['questionid']],
-                                            async (err, results) => {
-                                                if(err) {
-                                                    res.status(400);
-                                                    res.json({error: "Something went wrong..." });
-                                                }
-                                                else {
-                                                    // console.log({ id: results.rows[0]['id'], title: results.rows[0]['title']})
-                                                    await questions.push({ id: results.rows[0]['id'], title: results.rows[0]['title']});
-                                                    if(++questions_added === total_questions) res.json( {questions: questions});
-                                                }
-                                            }
-                                        )
-                                    }
-                        //
-                                }
-                            }
-                        )
-                    } else {
+                        return res.json({error: "Something went wrong..."});
+                    } else if (!(results.rows.length > 0)) {
                         res.status(400);
                         return res.json({error: "No user with id = " + String(user_id)});
                     }
                 }
             )
         }
+        let user_string = user_id ? ` AND UserID = ${user_id} ` : ``;
+        let query_string = ``;
+        if (keywords.length !== 0) {
+            query_string += `(SELECT * FROM (`;
+            let first = true;
+            for( let i = 0; i < keywords.length; i++) {
+                if(first) {
+                    first = false;
+                    query_string += `SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
+                }
+                else query_string += ` UNION ALL SELECT questionid FROM "keyword_question" WHERE keywordid IN (SELECT id AS Keyword_id FROM "keyword" WHERE keyword='${keywords[i]}')`;
+            }
+            query_string += `
+                    INTERSECT ALL
+                        SELECT id as questionid FROM "question" WHERE dateasked > to_timestamp(${date_from}/ 1000.0) 
+                        AND dateasked < to_timestamp(${date_to}/ 1000.0)`+ user_string +`)ss
+                        GROUP BY questionid
+                        ORDER BY COUNT(*) DESC)
+                        `
+        }
+        else {
+            query_string = `SELECT id as questionid FROM "question" WHERE dateasked > to_timestamp(${date_from}/ 1000.0) 
+                        AND dateasked < to_timestamp(${date_to}/ 1000.0)`+ user_string;
+        }
+        // console.log(query_string)
+        pool.query(
+            query_string,
+            [],
+            async (err, results) => {
+                if(err) {
+                    res.status(400);
+                    return res.json({error: "Something went wrong..." });
+                }
+                else {
+                    //
+                    let questions = [];
+                    let questions_added = 0;
+                    let total_questions = results.rows.length;
+                    for( let i = 0; i < results.rows.length; i++) {
+                         await pool.query(
+                            `SELECT * FROM "question" WHERE id = $1`,
+                            [results.rows[i]['questionid']],
+                            async (err, results) => {
+                                if(err) {
+                                    res.status(400);
+                                    res.json({error: "Something went wrong..." });
+                                }
+                                else {
+                                    // console.log({ id: results.rows[0]['id'], title: results.rows[0]['title']})
+                                    await questions.push({ id: results.rows[0]['id'], title: results.rows[0]['title']});
+                                    if(++questions_added === total_questions) return res.json( {questions: questions});
+                                }
+                            }
+                        )
+                    }
+                    if(results.rows.length === 0) return res.json( {questions: questions});
+                //
+                }
+            }
+        )
     })
 
 module.exports = router;
