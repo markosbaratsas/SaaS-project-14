@@ -28,10 +28,10 @@ router.post('/create-question/',
     function(req, res, next) {
         let title = req.body['title'];
         let QuestionText = req.body['QuestionText'];
-        let keywords = req.body['keywords'] === undefined ? [] : req.body['keywords'];
+        let keywords = req.body['keywords'] ? req.body['keywords'] : [];
         let DateAsked = Date.now();
         if (!title || !QuestionText){
-            res.status(400);
+            // res.status(400);
             return res.json({error: "Please provide all fields"});
         }
         else {
@@ -42,6 +42,7 @@ router.post('/create-question/',
                 (err, results) => {
                     if (err) {
                         console.log(err);
+                        res.status(400);
                         return res.json({error: "Something went wrong..."});
                     } else {
                         let UserID = results.rows[0]['id'];
@@ -52,7 +53,7 @@ router.post('/create-question/',
                                 if (err) {
                                     console.log(err);
                                 } else if (results.rows.length > 0) {
-                                    res.status(400);
+                                    // res.status(400);
                                     return res.json({ error: 'Question title should be unique' });
                                 } else {
                                     pool.query(

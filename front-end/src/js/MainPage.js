@@ -2,7 +2,6 @@ import Footer from "./Footer";
 import Title from "./Title";
 import SignButton from "./signIn/SignButton";
 import ChoicesBox from "./ChoicesBox";
-import {useEffect} from "react";
 
 export default function MainPage(){
 
