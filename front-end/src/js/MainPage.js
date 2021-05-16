@@ -1,9 +1,11 @@
 import Footer from "./Footer";
 import Title from "./Title";
-import SignButton from "./SignButton";
+import SignButton from "./signIn/SignButton";
 import ChoicesBox from "./ChoicesBox";
+import {useEffect} from "react";
 
 export default function MainPage(){
+
     return (
         <div className="total-wrapper">
             <div className='main-page-body'>
@@ -12,7 +14,7 @@ export default function MainPage(){
                         <Title text='This is the main page.'/>
                         <h2 className='welcome-text'>Welcome to AskMeAnything</h2>
                     </div>
-                    <SignButton props='Sign in'/>
+                    <SignButton />
                 </div>
                 <ChoicesBox/>
             </div>
