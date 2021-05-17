@@ -142,7 +142,6 @@ router.post('/create-question/',
 });
 
 router.get('/get-question-and-answers/:id',
-    passport.authenticate('token', { session: false }),
     function(req, res, next) {
         let question_id = req.params.id;
         pool.query(
@@ -259,7 +258,6 @@ router.post('/answer-question/',
     })
 
 router.post('/get-questions/',
-    passport.authenticate('token', { session: false }),
     function(req, res, next) {
         let keywords = req.body['keywords'] ? req.body['keywords'] : [];
         let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))).getTime() : 0o000000000000;
