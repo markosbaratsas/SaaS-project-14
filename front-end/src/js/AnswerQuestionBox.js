@@ -8,6 +8,7 @@ export default function AnswerQuestionBox() {
     let history = useHistory();
 
     const [answer, setAnswer] = useState({})
+    const [questionText, setQuestionText] = useState([])
     const [questions, setQuestions] = useState([])
     const [keywords, setKeywords] = useState([])
     const [answers, setAnswers] = useState([])
@@ -39,7 +40,6 @@ export default function AnswerQuestionBox() {
         console.log(details)
         axios(details)
             .then( (response) => {
-                console.log(response);
                 if(response.data.id) {
                     alert("Answer submitted successfully!")
                     history.push("/");
@@ -58,11 +58,11 @@ export default function AnswerQuestionBox() {
                 method: 'get',
                 url: 'http://localhost:3000/get-question-and-answers/'+value
             }
-            console.log(details)
             axios(details)
                 .then( (response) => {
                     setKeywords(response.data['Keywords'])
                     setAnswers(response.data['Answers'])
+                    setQuestionText(response.data['QuestionText'])
                 })
                 .catch( () => {
                     alert("Oops... Looks like something went wrong...")
@@ -82,6 +82,10 @@ export default function AnswerQuestionBox() {
                             {questions.map( (questions) =>
                                 <option value={questions['id']} key={questions['id']}>{questions['title']}</option>)}
                         </select>
+                    </div>
+                    <div className='input-div'>
+                        <label htmlFor="text">Question Text</label>
+                        <input className='read-only' type='text' value={questionText} readOnly/>
                     </div>
                     <div className='input-div'>
                         <label htmlFor="text">Question keywords</label>
