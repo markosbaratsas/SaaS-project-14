@@ -180,7 +180,7 @@ router.get('/get-question-and-answers/:id',
                                                 keywords.push(results.rows[i]['keyword']);
                                             }
                                             pool.query(
-                                                `SELECT * FROM "answer" WHERE questionid = $1`,
+                                                `SELECT a.*, u.Email FROM "answer" as a, "User" as u WHERE a.questionID = $1 AND a.userid = u.ID`,
                                                 [question_id],
                                                 (err, results) => {
                                                     if(err) {
@@ -190,7 +190,7 @@ router.get('/get-question-and-answers/:id',
                                                     else {
                                                         let answers = [];
                                                         for( let i = 0; i < results.rows.length; i++){
-                                                            answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, ''), user: results.rows[i]['userid']})
+                                                            answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, ''), user: results.rows[i]['email']})
                                                         }
                                                         return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Keywords: keywords, Answers: answers } )
                                                     }

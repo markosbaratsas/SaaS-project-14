@@ -317,6 +317,8 @@ section .wave.wave2 {
     font-size: 18px;
     border: 0;
     color: #a4a4a4;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .answer-box {
@@ -370,7 +372,11 @@ section .wave.wave2 {
     justify-content: center;
     align-items: flex-end;
     font-family: 'Catamaran', sans-serif;
-    font-family: 'Catamaran', sans-serif;
     font-size: 50px;
+    margin-top: 30px;
     height: 20px;
+}
+
+::-webkit-scrollbar {
+    width: 0;
 }
