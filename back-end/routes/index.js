@@ -155,7 +155,7 @@ router.get('/get-question-and-answers/:id',
                 else if (results.rows.length > 0 ) {
                     let title = results.rows[0]['title'];
                     let question_text = results.rows[0]['questiontext'];
-                    let date_asked = results.rows[0]['dateasked'];
+                    let date_asked = results.rows[0]['dateasked'].toISOString().replace(/T/, ' ').replace(/\..+/, '');
                     let user_id = results.rows[0]['userid'];
                     pool.query(
                         `SELECT email FROM "User" WHERE id = $1`,
@@ -168,19 +168,34 @@ router.get('/get-question-and-answers/:id',
                             else {
                                 let user_email = results.rows[0]['email'];
                                 pool.query(
-                                    `SELECT * FROM "answer" WHERE questionid = $1`,
+                                    `SELECT keyword FROM "keyword" as k, "keyword_question" as kq WHERE k.ID = kq.KeywordID AND kq.QuestionID = $1`,
                                     [question_id],
                                     (err, results) => {
-                                        if(err) {
+                                        if (err) {
                                             res.status(400);
                                             return res.json({error: 'Something went wrong...'});
-                                        }
-                                        else {
-                                            let answers = [];
+                                        } else {
+                                            let keywords = [];
                                             for( let i = 0; i < results.rows.length; i++){
-                                                answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateasked'], user: results.rows[i]['userid']})
+                                                keywords.push(results.rows[i]['keyword']);
                                             }
-                                            return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Answers: answers } )
+                                            pool.query(
+                                                `SELECT * FROM "answer" WHERE questionid = $1`,
+                                                [question_id],
+                                                (err, results) => {
+                                                    if(err) {
+                                                        res.status(400);
+                                                        return res.json({error: 'Something went wrong...'});
+                                                    }
+                                                    else {
+                                                        let answers = [];
+                                                        for( let i = 0; i < results.rows.length; i++){
+                                                            answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, ''), user: results.rows[i]['userid']})
+                                                        }
+                                                        return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Keywords: keywords, Answers: answers } )
+                                                    }
+                                                }
+                                            )
                                         }
                                     }
                                 )
