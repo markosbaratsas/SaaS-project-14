@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Answers from './Answers';
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 export default function AnswerQuestionBox() {
+    let history = useHistory();
+
     const [answer, setAnswer] = useState({})
     const [questions, setQuestions] = useState([])
     const [keywords, setKeywords] = useState([])
@@ -27,6 +30,25 @@ export default function AnswerQuestionBox() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        let details = {
+            method: 'post',
+            url: 'http://localhost:3000/answer-question/',
+            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            data: answer,
+        }
+        console.log(details)
+        axios(details)
+            .then( (response) => {
+                console.log(response);
+                if(response.data.id) {
+                    alert("Answer submitted successfully!")
+                    history.push("/");
+                }
+                else alert("Oops... Looks like something went wrong...");
+            })
+            .catch( () => {
+                alert("Oops... Looks like something went wrong...")
+            })
     }
 
     const handleChange = (e) => {
