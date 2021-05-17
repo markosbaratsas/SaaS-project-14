@@ -69,6 +69,7 @@ Question title should be unique, otherwise a 400 Bad Request.
         UserID: {
             email: USERS_EMAIL
         },
+        Keywords: ['keyword1', 'keyword 2', ...]
         Answers: [
             ANSWER1,
             ANSWER2,
