@@ -223,6 +223,44 @@ Question title should be unique, otherwise a 400 Bad Request.
   * Code: `400 Bad Request`
   * Content: `{ error: 'Something went wrong...' }`
 
+### Get answers per period
+* URL: `/get-answers-per-period/`
+* Method: `POST`
+* Requires Authentication: **NO**
+* Data Params: In the body of the POST request, fill in the following fields of the following json:
+```javascript
+{
+  date_from: 'YYYY-MM-DD',
+  date_to: 'YYYY-MM-DD'
+}
+```
+* Success Response:
+  * Code: `200`
+  * Content:
+    ```javascript
+    {
+        amswers_per_period: [
+            {
+                date: 'Date 1',
+                count: 'Date 1 count'
+            },
+            {
+                date: 'Date 2',
+                count: 'Date 2 count'
+            },
+            ...,
+            {
+                date: 'Date N',
+                count: 'Date N count'
+            }
+        ]
+    }
+    ```
+
+* Error Response:
+  * Code: `400 Bad Request`
+  * Content: `{ error: 'Something went wrong...' }`
+
 ### Sign-up
 
 ### Sign-in
