@@ -37,7 +37,7 @@
     font-weight: 400;
 }
 
-.sign-button {
+.main-button {
     border-radius: 40px;
     background-image: linear-gradient(90deg, rgba(73,195,204,1) 0%, rgba(52,171,200,1) 100%);
     border: 0;
@@ -48,12 +48,16 @@
     font-size: 18px;
     width: 200px;
     padding: 10px 10px;
-    position: fixed;
-    right: 50px;
+    text-align: center;
 }
 
-.sign-button:hover {
+.main-button:hover {
     transform: translateY(-5px);
+}
+
+.sign-button {
+    position: fixed;
+    right: 50px;
 }
 
 .title-box {
@@ -184,21 +188,7 @@
 }
 
 .sign-button-form {
-    border-radius: 40px;
-    background-image: linear-gradient(90deg, rgb(73, 195, 204) 0%, rgb(52, 171, 200) 100%);
-    border: 0;
-    color: #d2d2d2;
-    transition: transform 0.7s;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    width: 200px;
-    padding: 10px 10px;
     margin-top: 5%;
-}
-
-.sign-button-form:hover {
-    transform: translateY(-5px);
 }
 
 section {
@@ -310,7 +300,7 @@ section .wave.wave2 {
     background-color: #080e18;
     border: none;
     border-radius: 5px;
-    padding: 5px;
+    /*padding: 5px;*/
     width: 100%;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
@@ -322,7 +312,7 @@ section .wave.wave2 {
 }
 
 .answer-box {
-    padding: 30px;
+    padding: 20px 30px 0 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -379,4 +369,26 @@ section .wave.wave2 {
 
 ::-webkit-scrollbar {
     width: 0;
+}
+
+.footer a {
+    color: #d2d2d2;
+    transition: 0.5s;
+}
+.footer a:hover {
+    color: #797979;
+    text-decoration: none;
+}
+
+.questions-keyword {
+    padding: 80px 80px 40px 80px;
+}
+
+.questions-keyword-button {
+    margin-top: 50px;
+}
+
+.link-to, .link-to:hover, .link-to:active {
+    text-decoration: none;
+    color: currentColor;
 }
