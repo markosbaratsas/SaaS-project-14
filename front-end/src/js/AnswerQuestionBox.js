@@ -12,6 +12,7 @@ export default function AnswerQuestionBox() {
     const [questions, setQuestions] = useState([])
     const [keywords, setKeywords] = useState([])
     const [answers, setAnswers] = useState([])
+    const style = JSON.parse(localStorage.getItem("token")) === null ? {display: 'none'} : {display: 'block'}
 
     useEffect(() => {
         let details = {
@@ -22,7 +23,7 @@ export default function AnswerQuestionBox() {
         console.log(details)
         axios(details)
             .then( (response) => {
-                setQuestions(response.data['questions'])
+                setQuestions(JSON.parse(localStorage.getItem("token")) === null ? response.data['questions'].slice(0, 10) : response.data['questions'])
             })
             .catch( () => {
                 alert("Oops... Looks like something went wrong...")
@@ -94,12 +95,12 @@ export default function AnswerQuestionBox() {
                     <div className='input-div'>
                         <Answers answers={answers}/>
                     </div>
-                    <div className='input-div'>
+                    <div className='input-div' style={style}>
                         <label htmlFor="text">Your answer</label>
                         <textarea className='text' name='AnswerText' onChange={handleChange} required />
                     </div>
                     <div className='form-buttons'>
-                        <button type='submit' className='sign-button-form'>Submit answer</button>
+                        <button type='submit' className='main-button sign-button-form' style={style}>Submit answer</button>
                         <Link to='./' className='cancel-button'>Never mind</Link>
                     </div>
                 </form>
