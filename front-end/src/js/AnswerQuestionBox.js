@@ -12,6 +12,9 @@ export default function AnswerQuestionBox() {
     const [questions, setQuestions] = useState([])
     const [keywords, setKeywords] = useState([])
     const [answers, setAnswers] = useState([])
+    const [filterKeywords, setFilterKeywords] = useState([])
+    const [dateFrom, setDateFrom] = useState()
+    const [dateTo, setDateTo] = useState()
     const style = JSON.parse(localStorage.getItem("token")) === null ? {display: 'none'} : {display: 'block'}
 
     useEffect(() => {
@@ -72,6 +75,54 @@ export default function AnswerQuestionBox() {
         setAnswer({...answer, [name]: value})
     }
 
+    const handleChangeFilterKeywords = (e) => {
+        // eslint-disable-next-line no-unused-vars
+        const { value, name } = e.target
+        let keywordArray = value.split(', ');
+        setFilterKeywords(keywordArray)
+    }
+
+    const handleChangePeriod = (e) => {
+        const { value, name } = e.target
+        if(name === 'date_from') setDateFrom(value)
+        else setDateTo(value)
+    }
+
+    const filter = (e) => {
+        e.preventDefault()
+        let details = {
+            method: 'post',
+            url: 'http://localhost:3000/get-questions/',
+            data: { keywords: filterKeywords,
+                date_from: dateFrom,
+                date_to: dateTo
+            }
+        }
+        axios(details)
+            .then( (response) => {
+                setQuestions(JSON.parse(localStorage.getItem("token")) === null ? response.data['questions'].slice(0, 10) : response.data['questions'])
+            })
+            .catch( () => {
+                alert("Oops... Looks like something went wrong...")
+            })
+    }
+
+    const clear = (e) => {
+        e.preventDefault()
+        let details = {
+            method: 'post',
+            url: 'http://localhost:3000/get-questions/',
+            data: {}
+        }
+        axios(details)
+            .then( (response) => {
+                setQuestions(JSON.parse(localStorage.getItem("token")) === null ? response.data['questions'].slice(0, 10) : response.data['questions'])
+            })
+            .catch( () => {
+                alert("Oops... Looks like something went wrong...")
+            })
+    }
+
     return (
         <div className='sign-page-body'>
             <div className='sign-box question-box'>
@@ -91,6 +142,25 @@ export default function AnswerQuestionBox() {
                     <div className='input-div'>
                         <label htmlFor="text">Question keywords</label>
                         <input className='read-only' type='text' value={keywords.toString().replace(/,/g, ", ")} readOnly/>
+                    </div>
+                    <div className='input-div'>
+                        <label htmlFor="text">Filter by period</label>
+                        <div className='filters-period'>
+                            <h3>From:</h3>
+                            <input type='date' name='date_from' onChange={handleChangePeriod} />
+                            <h3>To:</h3>
+                            <input type='date' name='date_to' onChange={handleChangePeriod} />
+                        </div>
+                    </div>
+                    <div className='input-div'>
+                        <label htmlFor="text">Filter by keywords</label>
+                        <div className='filters-keywords'>
+                            <input type='text' name='keywords' onChange={handleChangeFilterKeywords} placeholder='Keyword 1, Keyword 2, Keyword 3 ...' />
+                            <div className='filter-buttons'>
+                                <button onClick={filter} className='filter-button filter'>Filter</button>
+                                <button onClick={clear} className='filter-button clear'>Clear filters</button>
+                            </div>
+                        </div>
                     </div>
                     <div className='input-div'>
                         <Answers answers={answers}/>

@@ -392,3 +392,62 @@ section .wave.wave2 {
     text-decoration: none;
     color: currentColor;
 }
+
+.filters-keywords {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.filters-keywords input {
+    width: 75%;
+}
+
+.filter-buttons {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 25%;
+}
+
+.filter-button {
+    background-color: transparent;
+    border: none;
+    transition: transform 0.7s;
+}
+
+.filter-button:hover {
+    transform: translateY(-5px);
+}
+
+.filter {
+    color: rgba(73,195,204,1);
+}
+
+.clear {
+    color: #d2d2d2;
+}
+
+.filters-period {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+
+.filters-period input {
+    width: 40%;
+    margin-left: 2%;
+}
+
+.filters-period h3 {
+    font-size: 15px;
+    font-weight: normal;
+    /*width: 5%;*/
+    margin-left: 5%;
+}
