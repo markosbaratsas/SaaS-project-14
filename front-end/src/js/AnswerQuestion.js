@@ -2,7 +2,7 @@ import Title from "./Title";
 import AnswerQuestionBox from "./AnswerQuestionBox";
 
 export default function AnswerQuestion(){
-    const text = JSON.parse(localStorage.getItem("token")) === null ? "Browse questions. You can see up to 10 questions." : "Answer a question"
+    const text = JSON.parse(localStorage.getItem("token")) === null ? "You can see up to 10 questions. Sign up to see more!" : "Answer a question"
 
     return (
         <div className="total-wrapper">
