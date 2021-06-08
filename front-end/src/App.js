@@ -7,6 +7,8 @@ import LogInPage from './js/signIn/LogInPage';
 import SignUpPage from './js/signIn/SignUpPage';
 import AskQuestion from './js/AskQuestion';
 import AnswerQuestion from './js/AnswerQuestion';
+import QuestionsKeyword from './js/QuestionsKeyword';
+import QuestionsPeriod from './js/QuestionsPeriod';
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from './js/context/auth';
 
@@ -27,8 +29,10 @@ function App() {
                         <Route exact path='/' component={MainPage} />
                         <Route exact path='/login' component={LogInPage} />
                         <Route exact path='/signup' component={SignUpPage} />
+                        <Route exact path='/keyword' component={QuestionsKeyword} />
+                        <Route exact path='/period' component={QuestionsPeriod} />
                         <PrivateRoute exact path='/askquestion' component={AskQuestion} />
-                        <PrivateRoute exact path='/answerquestion' component={AnswerQuestion} />
+                        <Route exact path='/answerquestion' component={AnswerQuestion} />
                     </Switch>
               </Router>
             </AuthContext.Provider>
