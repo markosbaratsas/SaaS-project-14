@@ -363,4 +363,27 @@ router.post('/get-questions/',
         )
     })
 
+router.get('/get-questions-per-keyword/',
+    function(req, res, next) {
+        pool.query(
+            `SELECT  count(*), k.Keyword FROM Keyword_question as kq, keyword as k
+                                         WHERE k.id = kq.KeywordID
+                                         GROUP BY k.Keyword
+                                         ORDER BY count(*) DESC`,
+            [],
+            (err, results) => {
+                if (err) {
+                    res.status(400);
+                    return res.json({error: "Something went wrong..."});
+                }
+                else {
+                    let answer = results.rows.map((row) => {
+                        return { keyword: row['keyword'], count: row['count'] }
+                    })
+                    return res.json( { questions_per_keyword: answer });
+                }
+            }
+        )
+    })
+
 module.exports = router;
