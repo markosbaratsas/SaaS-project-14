@@ -48,7 +48,7 @@ export default function LogInBox() {
                         <label htmlFor="email">password*</label>
                         <input type='password' name='password' onChange={handleChange} required />
                     </div>
-                    <button type='submit' className='sign-button-form'>Log in</button>
+                    <button type='submit' className='main-button sign-button-form'>Log in</button>
                 </form>
                 <h2>Don't have an account yet?<Link to='/signup' className='link'>Sign up!</Link></h2>
             </div>

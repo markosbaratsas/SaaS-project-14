@@ -19,7 +19,7 @@ export default function SignButton() {
     }
 
     return (
-        <button onClick={direction} className='sign-button'>
+        <button onClick={direction} className='main-button sign-button'>
             {buttonString}
         </button>
     )

@@ -61,7 +61,7 @@ export default function AskQuestionBox() {
                         <input type='text' name='keywords' onChange={handleChangeKeywords} placeholder='Keyword 1, Keyword 2, Keyword 3 ...' />
                     </div>
                     <div className='form-buttons'>
-                        <button type='submit' className='sign-button-form'>Submit</button>
+                        <button type='submit' className='main-button sign-button-form'>Submit</button>
                         <Link to='./' className='cancel-button'>Cancel</Link>
                     </div>
                 </form>

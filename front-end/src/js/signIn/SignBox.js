@@ -58,7 +58,7 @@ export default function SignBox(props) {
                         <label htmlFor="email">re-enter password *</label>
                         <input type='password' name='password2' onChange={handleChange} required />
                     </div>
-                    <button type='submit' className='sign-button-form'>Sign up</button>
+                    <button type='submit' className='main-button sign-button-form'>Sign up</button>
                 </form>
                 <h2>Already have an account yet?<Link to='/login' className='link'>Log in!</Link></h2>
             </div>
