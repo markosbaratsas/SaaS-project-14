@@ -7,7 +7,8 @@ export default function PeriodBox() {
 
     let dateTo = new Date()
     let dateFrom = new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() - 7)
-    const [count, setCount] = useState([])
+    const [countQuestions, setCountQuestions] = useState([])
+    const [countAnswers, setCountAnswers] = useState([])
 
     const [dates, setDates] = useState([])
 
@@ -25,7 +26,14 @@ export default function PeriodBox() {
         labels: dates,
         datasets: [{
             label: 'Questions per day',
-            data: count,
+            data: countQuestions,
+            backgroundColor: colors,
+            borderColor: colors,
+            borderWidth: 1
+        },
+        {
+            label: 'Answers per day',
+            data: countAnswers,
             backgroundColor: colors,
             borderColor: colors,
             borderWidth: 1
@@ -33,23 +41,39 @@ export default function PeriodBox() {
     };
 
     useEffect(() => {
-        let details = {
+        let details_question = {
             method: 'post',
             url: 'http://localhost:3000/get-questions-per-period/',
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
-        console.log(details)
-        axios(details)
+        console.log(details_question)
+        axios(details_question)
             .then( (response) => {
                 setDates(response.data.questions_per_period.map((item) => {
                     return item.date;
                 }))
-                setCount(response.data.questions_per_period.map((item) => {
+                setCountQuestions(response.data.questions_per_period.map((item) => {
                     return item.count;
                 }))
             })
             .catch( () => {
-                alert("Ops... Looks like something went wrong...")
+                alert("Oops... Looks like something went wrong...")
+            })
+
+        let details_answer = {
+            method: 'post',
+            url: 'http://localhost:3000/get-answers-per-period/',
+            data: { 'date-from': dateFrom, 'date-to': dateTo },
+        }
+        console.log(details_answer)
+        axios(details_answer)
+            .then( (response) => {
+                setCountAnswers(response.data.answers_per_period.map((item) => {
+                    return item.count;
+                }))
+            })
+            .catch( () => {
+                alert("Oops... Looks like something went wrong...")
             })
     }, [])
 
