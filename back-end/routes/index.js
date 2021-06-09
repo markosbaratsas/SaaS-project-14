@@ -599,5 +599,29 @@ router.post('/get-user-answers-per-period/',
         )
     })
 
+router.get('/get-user-questions/',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let user_id = req.user.id
+        pool.query(
+            `SELECT * FROM Question WHERE UserID = $1`,
+            [user_id],
+            (err, results) => {
+                if (err) {
+                    res.status(400);
+                    return res.json({error: "Something went wrong..."});
+                } else {
+                    let total_questions = results.rows.length
+                    let questions_added = 0
+                    let questions = []
+                    for(let i = 0; i < total_questions; i++) {
+                        questions.push({ id: results.rows[i]['id'], title: results.rows[i]['title']});
+                        if(++questions_added === total_questions) return res.json( {questions: questions});
+                    }
+                }
+            }
+        )
+    })
+
 
 module.exports = router;
