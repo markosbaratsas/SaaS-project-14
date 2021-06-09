@@ -1,13 +1,16 @@
 import Choice from "./Choice";
-import icon from "./keyword.png"
+import keyword from "./keyword.png"
+import browse from "./browse.png"
+import question from "./question.png"
+import period from "./period.png"
 
 export default function ChoicesBox() {
     return (
         <div className='choices-container'>
-            <Choice icon={icon} title="Questions per keyword" url='./keyword'/>
-            <Choice title="Questions per day/period" url='./period'/>
-            <Choice title="Ask a new question" url='./askquestion'/>
-            <Choice title="Browse answers" url='./answerquestion'/>
+            <Choice icon={keyword} title="Questions per keyword" url='./keyword'/>
+            <Choice icon={period} title="Questions per day/period" url='./period'/>
+            <Choice icon={question} title="Ask a new question" url='./askquestion'/>
+            <Choice icon={browse} title="Browse answers" url='./answerquestion'/>
         </div>
     )
 }
