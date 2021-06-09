@@ -399,6 +399,40 @@ Question title should be unique, otherwise a 400 Bad Request.
   * Code: `400 Bad Request`
   * Content: `{ error: 'Something went wrong...' }`
 
+### Get user answers
+* URL: `/get-user-answers/`
+* Method: `GET`
+* Requires Authentication: **YES**
+* Success Response:
+  * Code: `200`
+  * Content:
+    ```javascript
+    {
+        answers: [
+            {
+                question: 'question text 1',
+                text: 'answer text 1',
+                date: 'answer date 1'
+            },
+            {
+                question: 'question text 2',
+                text: 'answer text 2',
+                date: 'answer date 2'
+            },
+            ...,
+            {
+                question: 'question text 3',
+                text: 'answer text 3',
+                date: 'answer date 3'
+            }
+        ]
+    }
+    ```
+
+* Error Response:
+  * Code: `400 Bad Request`
+  * Content: `{ error: 'Something went wrong...' }`
+
 ### Sign-up
 
 ### Sign-in
