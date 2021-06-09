@@ -61,6 +61,7 @@ export default function SignBox(props) {
                     <button type='submit' className='main-button sign-button-form'>Sign up</button>
                 </form>
                 <h2>Already have an account yet?<Link to='/login' className='link'>Log in!</Link></h2>
+                <Link to='/' className='link-to'>Back to main page</Link>
             </div>
         </div>
     )

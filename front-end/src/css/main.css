@@ -129,6 +129,15 @@
     margin-bottom: 20vh;
 }
 
+.sign-box .link-to {
+    color: #49C3CC;
+    margin-bottom: 9px;
+}
+
+.sign-box .link-to:hover {
+    text-decoration: none;
+}
+
 .sign-page-body {
     display: flex;
     flex-direction: column;
@@ -246,7 +255,7 @@ section .wave.wave2 {
 .sign-box h2 {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 17px;
     margin: 20px;
 }
 
