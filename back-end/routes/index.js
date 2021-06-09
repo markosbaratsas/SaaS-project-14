@@ -13,8 +13,8 @@ function getYYYYMMDD(d0) {
     return new Date(d.getTime() - d.getTimezoneOffset() * 60 * 1000).toISOString().split('T')[0]
 }
 
-var getDates = function(startDate, endDate) {
-    var dates = [],
+let getDates = function(startDate, endDate) {
+    let dates = [],
         currentDate = startDate,
         addDays = function(days) {
             var date = new Date(this.valueOf());
@@ -483,6 +483,31 @@ router.post('/get-answers-per-period/',
                         else answer.push({ date: period[i], count: 0 })
                         if(i === period.length - 1) return res.json( { answers_per_period: answer });
                     }
+                }
+            }
+        )
+    })
+
+router.get('/get-user-questions-per-keyword/',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let user_id = req.user.id
+        pool.query(
+            `SELECT  count(*), k.Keyword FROM Keyword_question as kq, keyword as k, question as q
+                                         WHERE k.id = kq.KeywordID AND kq.questionID = q.ID AND q.UserID = $1
+                                         GROUP BY k.Keyword
+                                         ORDER BY count(*) DESC`,
+            [user_id],
+            (err, results) => {
+                if (err) {
+                    res.status(400);
+                    return res.json({error: "Something went wrong..."});
+                }
+                else {
+                    let answer = results.rows.map((row) => {
+                        return { keyword: row['keyword'], count: row['count'] }
+                    })
+                    return res.json( { questions_per_keyword: answer });
                 }
             }
         )
