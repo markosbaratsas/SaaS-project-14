@@ -3,7 +3,6 @@ import UserQuestionsKeyword from './UserQuestionsKeyword'
 import UserQuestions from './UserQuestions'
 import UserAnswers from './UserAnswers'
 import UserQuestionsPeriod from './UserQuestionsPeriod'
-import {Bar} from "react-chartjs-2";
 import {Link} from "react-router-dom";
 
 export default function AccountBox() {

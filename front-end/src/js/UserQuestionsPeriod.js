@@ -8,30 +8,20 @@ export default function UserQuestionsPeriod() {
 
     const [dates, setDates] = useState([])
 
-
-    const colors = [
-        'rgba(255, 99, 132, 0.7)',
-        'rgba(255, 159, 64, 0.7)',
-        'rgba(255, 205, 86, 0.7)',
-        'rgba(75, 192, 192, 0.7)',
-        'rgba(54, 162, 235, 0.7)',
-        'rgba(153, 102, 255, 0.7)'
-    ]
-
     let data = {
         labels: dates,
         datasets: [{
             label: 'Questions per day',
             data: countQuestions,
-            backgroundColor: colors,
-            borderColor: colors,
+            backgroundColor: ['rgba(213,62,131,0.7)'],
+            borderColor: ['rgba(213,62,131,0.7)'],
             borderWidth: 1
         },
             {
                 label: 'Answers per day',
                 data: countAnswers,
-                backgroundColor: colors,
-                borderColor: colors,
+                backgroundColor: ['rgba(245,131,42,0.7)'],
+                borderColor: ['rgba(245,131,42,0.7)'],
                 borderWidth: 1
             }]
     };
