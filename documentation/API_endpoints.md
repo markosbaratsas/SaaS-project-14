@@ -259,6 +259,37 @@ Question title should be unique, otherwise a 400 Bad Request.
 
 * Error Response:
   * Code: `400 Bad Request`
+  * Content: `{ error: 'Something went wrong...' }`\
+
+### Get user questions per keyword
+* URL: `/get-user-questions-per-keyword/`
+* Method: `GET`
+* Requires Authentication: **YES**
+* Success Response:
+  * Code: `200`
+  * Content:
+    ```javascript
+    {
+        questions_per_keyword: [
+            {
+                keyword: 'Keyword 1',
+                count: 'Keyword 1 count'
+            },
+            {
+                keyword: 'Keyword 2',
+                count: 'Keyword 2 count'
+            },
+            ...,
+            {
+                keyword: 'Keyword N',
+                count: 'Keyword N count'
+            }
+        ]
+    }
+    ```
+
+* Error Response:
+  * Code: `400 Bad Request`
   * Content: `{ error: 'Something went wrong...' }`
 
 ### Sign-up
