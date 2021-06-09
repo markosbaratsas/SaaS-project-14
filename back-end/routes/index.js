@@ -623,5 +623,31 @@ router.get('/get-user-questions/',
         )
     })
 
+router.get('/get-user-answers/',
+    passport.authenticate('token', { session: false }),
+    function(req, res, next) {
+        let user_id = req.user.id
+        pool.query(
+            `SELECT q.QuestionText, a.AnswerText, a.DateAnswered 
+                    FROM answer as a, question as q 
+                    WHERE a.UserID = $1 AND q.ID = a.questionID`,
+            [user_id],
+            (err, results) => {
+                if (err) {
+                    res.status(400);
+                    return res.json({error: "Something went wrong..."});
+                } else {
+                    let total_answers = results.rows.length
+                    let answers_added = 0
+                    let answers = []
+                    for(let i = 0; i < total_answers; i++) {
+                        answers.push({ question: results.rows[i]['questiontext'], text: results.rows[i]['answertext'], date: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, '')});
+                        if(++answers_added === total_answers) return res.json( {answers: answers});
+                    }
+                }
+            }
+        )
+    })
+
 
 module.exports = router;
