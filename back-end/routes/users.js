@@ -50,8 +50,6 @@ passport.use('signIn', new LocalStrategy(function(email, password, done) {
                 console.log("Error: " + err);
                 return done(null, false, { message: "Something went wrong, please try again." });
             } else {
-                console.log(results.rows);
-
                 if (results.rows.length > 0) {
                     const user = results.rows[0];
 
@@ -61,7 +59,7 @@ passport.use('signIn', new LocalStrategy(function(email, password, done) {
                             return done(null, false, { message: "Something went wrong, please try again." });
                         }
                         if (isMatch) {
-                            return done(null, { email: user.email  });
+                            return done(null, { email: user.email, id: user.id  });
                         } else {
                             //password is incorrect
                             return done(null, false, { message: "Password is incorrect" });
@@ -82,7 +80,7 @@ passport.use('token', new JWTStrategy(
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
     },
     function(token, done) {
-        return done(null, { email: token.email });
+        return done(null, { email: token.email, id: token.id });
     }
 ));
 
@@ -90,7 +88,7 @@ router.post('/sign-in',
     passport.authenticate('signIn', {session: false}),
     function(req, res, next) {
         res.json({
-            token: jwt.sign(req.user, process.env.JWT_SECRET, { expiresIn: 360000})
+             email: req.user['email'], token: jwt.sign(req.user, process.env.JWT_SECRET, { expiresIn: 360000})
         });
     }
 );
