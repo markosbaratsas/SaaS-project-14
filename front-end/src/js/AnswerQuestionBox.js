@@ -90,6 +90,7 @@ export default function AnswerQuestionBox() {
 
     const filter = (e) => {
         e.preventDefault()
+        setAnswers([])
         let details = {
             method: 'post',
             url: 'http://localhost:3000/get-questions/',
@@ -129,8 +130,8 @@ export default function AnswerQuestionBox() {
                 <form onSubmit={handleSubmit}>
                     <div className='input-div'>
                         <label htmlFor="question">Question title</label>
-                        <select name="questionID" onChange={handleChange}>
-                            <option disabled selected value>Choose a question</option>
+                        <select name="questionID" onChange={handleChange} defaultValue={'Choose a question'}>
+                            <option disabled>Choose a question</option>
                             {questions.map( (questions) =>
                                 <option value={questions['id']} key={questions['id']}>{questions['title']}</option>)}
                         </select>

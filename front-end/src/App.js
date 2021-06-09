@@ -9,6 +9,7 @@ import AskQuestion from './js/AskQuestion';
 import AnswerQuestion from './js/AnswerQuestion';
 import QuestionsKeyword from './js/QuestionsKeyword';
 import QuestionsPeriod from './js/QuestionsPeriod';
+import Account from './js/Account';
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from './js/context/auth';
 
@@ -33,6 +34,7 @@ function App() {
                         <Route exact path='/period' component={QuestionsPeriod} />
                         <PrivateRoute exact path='/askquestion' component={AskQuestion} />
                         <Route exact path='/answerquestion' component={AnswerQuestion} />
+                        <PrivateRoute exact path='/account' component={Account} />
                     </Switch>
               </Router>
             </AuthContext.Provider>
