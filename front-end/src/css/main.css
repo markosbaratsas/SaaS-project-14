@@ -129,13 +129,10 @@
     margin-bottom: 20vh;
 }
 
-.sign-box .link-to {
+.redirection, .redirection:hover, .redirection:active {
     color: #49C3CC;
-    margin-bottom: 9px;
-}
-
-.sign-box .link-to:hover {
     text-decoration: none;
+    margin-bottom: 9px;
 }
 
 .sign-page-body {

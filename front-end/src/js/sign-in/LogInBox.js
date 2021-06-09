@@ -52,7 +52,7 @@ export default function LogInBox() {
                     <button type='submit' className='main-button sign-button-form'>Log in</button>
                 </form>
                 <h2>Don't have an account yet?<Link to='/signup' className='link'>Sign up!</Link></h2>
-                <Link to='/' className='link-to'>Back to main page</Link>
+                <Link to='/' className='redirection'>Back to main page</Link>
             </div>
         </div>
     )
