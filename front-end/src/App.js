@@ -2,14 +2,14 @@ import './App.css';
 import './css/main.css'
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import MainPage from './js/MainPage';
-import LogInPage from './js/signIn/LogInPage';
-import SignUpPage from './js/signIn/SignUpPage';
-import AskQuestion from './js/AskQuestion';
-import AnswerQuestion from './js/AnswerQuestion';
-import QuestionsKeyword from './js/QuestionsKeyword';
-import QuestionsPeriod from './js/QuestionsPeriod';
-import Account from './js/Account';
+import MainPage from './js/main-page/MainPage';
+import LogInPage from './js/sign-in/LogInPage';
+import SignUpPage from './js/sign-in/SignUpPage';
+import AskQuestion from './js/ask-question-page/AskQuestion';
+import AnswerQuestion from './js/answer-question-page/AnswerQuestion';
+import QuestionsKeyword from './js/diagrams-pages/QuestionsKeyword';
+import QuestionsPeriod from './js/diagrams-pages/QuestionsPeriod';
+import Account from './js/account-page/Account';
 import PrivateRoute from './PrivateRoute';
 import { AuthContext } from './js/context/auth';
 

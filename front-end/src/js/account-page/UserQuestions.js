@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Answers from './Answers';
+import Answers from '../answer-question-page/Answers';
 import axios from "axios";
 
 export default function UserQuestions() {

@@ -1,5 +1,5 @@
-import Title from "./Title";
-import SignButton from "./signIn/SignButton";
+import Title from "../Title";
+import SignButton from "../sign-in/SignButton";
 import AccountBox from "./AccountBox";
 
 export default function Account(){

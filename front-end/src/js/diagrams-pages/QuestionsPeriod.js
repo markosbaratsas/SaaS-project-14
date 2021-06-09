@@ -1,8 +1,8 @@
-import Title from "./Title";
-import KeywordsBox from "./KeywordsBox";
+import Title from "../Title";
+import PeriodBox from "./PeriodBox";
 import React from "react";
 
-export default function QuestionsKeyword(){
+export default function QuestionsPeriod(){
     return (
         <div className="total-wrapper">
             <section>
@@ -12,11 +12,11 @@ export default function QuestionsKeyword(){
                 <div className='main-page-body'>
                     <div className='title-box'>
                         <div className='title-box-vertical'>
-                            <Title text='This is the questions per keyword page.'/>
-                            <h2 className='welcome-text'>Now displaying question per keyword for the top keywords</h2>
+                            <Title text='This is the questions per period page.'/>
+                            <h2 className='welcome-text'>Now displaying number of questions and answers per day for the last week</h2>
                         </div>
                     </div>
-                    <KeywordsBox />
+                    <PeriodBox />
                 </div>
             </section>
         </div>
