@@ -292,6 +292,37 @@ Question title should be unique, otherwise a 400 Bad Request.
   * Code: `400 Bad Request`
   * Content: `{ error: 'Something went wrong...' }`
 
+### Get user questions per period
+* URL: `/get-user-questions-per-period/`
+* Method: `GET`
+* Requires Authentication: **YES**
+* Success Response:
+  * Code: `200`
+  * Content:
+    ```javascript
+    {
+        questions_per_period: [
+            {
+                date: 'Date 1',
+                count: 'Date 1 count'
+            },
+            {
+                date: 'Date 2',
+                count: 'Date 2 count'
+            },
+            ...,
+            {
+                date: 'Date N',
+                count: 'Date N count'
+            }
+        ]
+    }
+    ```
+
+* Error Response:
+  * Code: `400 Bad Request`
+  * Content: `{ error: 'Something went wrong...' }`
+
 ### Sign-up
 
 ### Sign-in
