@@ -35,29 +35,33 @@ export default function AnswerQuestionBox() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        let details = {
-            method: 'post',
-            url: 'http://localhost:3000/answer-question/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
-            data: answer,
+        console.log(answer)
+        if(answer.questionID === "-1" || answer.questionID === undefined) alert("Please choose a question")
+        else {
+            let details = {
+                method: 'post',
+                url: 'http://localhost:3000/answer-question/',
+                headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+                data: answer,
+            }
+            console.log(details)
+            axios(details)
+                .then( (response) => {
+                    if(response.data.id) {
+                        alert("Answer submitted successfully!")
+                        history.push("/");
+                    }
+                    else alert("Oops... Looks like something went wrong...");
+                })
+                .catch( () => {
+                    alert("Oops... Looks like something went wrong...")
+                })
         }
-        console.log(details)
-        axios(details)
-            .then( (response) => {
-                if(response.data.id) {
-                    alert("Answer submitted successfully!")
-                    history.push("/");
-                }
-                else alert("Oops... Looks like something went wrong...");
-            })
-            .catch( () => {
-                alert("Oops... Looks like something went wrong...")
-            })
     }
 
     const handleChange = (e) => {
         let { value, name } = e.target
-        if(name === 'questionID') {
+        if(name === 'questionID' && value !== "-1") {
             let details = {
                 method: 'get',
                 url: 'http://localhost:3000/get-question-and-answers/'+value
@@ -131,7 +135,7 @@ export default function AnswerQuestionBox() {
                     <div className='input-div'>
                         <label htmlFor="question">Question title</label>
                         <select name="questionID" onChange={handleChange} defaultValue={'Choose a question'}>
-                            <option disabled>Choose a question</option>
+                            <option value={-1}>Choose a question</option>
                             {questions.map( (questions) =>
                                 <option value={questions['id']} key={questions['id']}>{questions['title']}</option>)}
                         </select>

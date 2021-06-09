@@ -27,7 +27,7 @@ export default function UserAnswers() {
             <h1>Your answers</h1>
             <Carousel className='carousel'>
                 {answers.map((answer) =>
-                    <Carousel.Item className='carousel-item'>
+                    <Carousel.Item className='carousel-item' key={answer.text}>
                         <h1>{answer.question}</h1>
                         <div className='answer-box'>
                             <div className='answer-details'>On <h3 className='no-right-padding'>{answer.date}</h3>, <h3>you</h3> answered:</div>
