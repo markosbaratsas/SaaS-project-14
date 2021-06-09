@@ -15,6 +15,7 @@ export default function SignButton() {
             setAuthTokens(null);
             setButtonString('Sign in');
             alert("You are signed out");
+            history.push("/");
         }
     }
 

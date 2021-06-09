@@ -19,6 +19,7 @@ export default function LogInBox() {
             .then( (response) => {
                 console.log(response)
                 setAuthTokens(response.data["token"]);
+                localStorage.setItem("email", JSON.stringify(response.data["email"]));
                 setLoggedIn(true);
             })
             .catch( (error) => {

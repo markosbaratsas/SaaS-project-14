@@ -38,14 +38,19 @@ export default function KeywordsBox() {
                 // setQuestions(response.data['questions'])
                 let i = 0;
                 let j = 0;
-                setKeywords(response.data.questions_per_keyword.map((item) => {
+                setKeywords(response.data.questions_per_keyword.filter((item) => {
                     if(i < 15) {
                         i++;
-                        return item.keyword;
+                        return true;
                     }
+                    else return false;
+                }).map((item) => {
+                    return item.keyword;
                 }))
-                setCount(response.data.questions_per_keyword.map((item) => {
-                    if(j++ <= i) return item.count;
+                setCount(response.data.questions_per_keyword.filter((item) => {
+                    return j++ <= i;
+                }).map((item) => {
+                    return item.count;
                 }))
                 setWidth(i)
             })

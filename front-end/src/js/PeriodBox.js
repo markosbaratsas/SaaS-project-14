@@ -4,9 +4,6 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 
 export default function PeriodBox() {
-
-    let dateTo = new Date()
-    let dateFrom = new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() - 7)
     const [countQuestions, setCountQuestions] = useState([])
     const [countAnswers, setCountAnswers] = useState([])
 
@@ -41,6 +38,8 @@ export default function PeriodBox() {
     };
 
     useEffect(() => {
+        let dateTo = new Date()
+        let dateFrom = new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() - 7)
         let details_question = {
             method: 'post',
             url: 'http://localhost:3000/get-questions-per-period/',
