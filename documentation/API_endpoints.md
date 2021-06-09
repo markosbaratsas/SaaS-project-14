@@ -294,8 +294,15 @@ Question title should be unique, otherwise a 400 Bad Request.
 
 ### Get user questions per period
 * URL: `/get-user-questions-per-period/`
-* Method: `GET`
+* Method: `POST`
 * Requires Authentication: **YES**
+  * Data Params: In the body of the POST request, fill in the following fields of the following json:
+```javascript
+{
+  date_from: 'YYYY-MM-DD',
+  date_to: 'YYYY-MM-DD'
+}
+```
 * Success Response:
   * Code: `200`
   * Content:
@@ -359,7 +366,38 @@ Question title should be unique, otherwise a 400 Bad Request.
 
 * Error Response:
   * Code: `400 Bad Request`
-  * Content: `{ error: 'Something went wrong...' }`\
+  * Content: `{ error: 'Something went wrong...' }`
+
+### Get user questions
+* URL: `/get-user-questions/`
+* Method: `GET`
+* Requires Authentication: **YES**
+* Success Response:
+  * Code: `200`
+  * Content:
+    ```javascript
+    {
+        questions: [
+            {
+                id: 'id 1',
+                title: 'question title 1'
+            },
+            {
+                id: 'id 2',
+                title: 'question title 2'
+            },
+            ...,
+            {
+                id: 'id 3',
+                title: 'question title 3'
+            }
+        ]
+    }
+    ```
+
+* Error Response:
+  * Code: `400 Bad Request`
+  * Content: `{ error: 'Something went wrong...' }`
 
 ### Sign-up
 
