@@ -55,55 +55,69 @@ router.post('/create-question/',
             return res.json({error: "Please provide all fields"});
         }
         else {
-            const email = String(req.user.email);
+            let user_id = req.user.id
             pool.query(
-                `SELECT id FROM "User" WHERE email = $1`,
-                [email],
+                `SELECT * FROM "question" WHERE title = $1`,
+                [title],
                 (err, results) => {
                     if (err) {
                         console.log(err);
-                        res.status(400);
-                        return res.json({error: "Something went wrong..."});
+                    } else if (results.rows.length > 0) {
+                        // res.status(400);
+                        return res.json({ error: 'Question title should be unique' });
                     } else {
-                        let UserID = results.rows[0]['id'];
                         pool.query(
-                            `SELECT * FROM "question" WHERE title = $1`,
-                            [title],
+                            `INSERT INTO "question" (title, QuestionText, DateAsked, UserID)
+                            VALUES ($1, $2, to_timestamp($3/ 1000.0), $4)
+                            RETURNING title, id`,
+                            [title, QuestionText, DateAsked, user_id],
                             (err, results) => {
                                 if (err) {
                                     console.log(err);
-                                } else if (results.rows.length > 0) {
-                                    // res.status(400);
-                                    return res.json({ error: 'Question title should be unique' });
+                                    res.status(400);
+                                    return res.json({error: "Something went wrong..."});
                                 } else {
-                                    pool.query(
-                                        `INSERT INTO "question" (title, QuestionText, DateAsked, UserID)
-                                        VALUES ($1, $2, to_timestamp($3/ 1000.0), $4)
-                                        RETURNING title, id`,
-                                        [title, QuestionText, DateAsked, UserID],
-                                        (err, results) => {
-                                            if (err) {
-                                                console.log(err);
-                                                res.status(400);
-                                                return res.json({error: "Something went wrong..."});
-                                            } else {
-                                                let question_id = results.rows[0]['id'];
-                                                let keywords_added = true;
-                                                for (let i = 0; i < keywords.length; i++) {
+                                    let question_id = results.rows[0]['id'];
+                                    let keywords_added = true;
+                                    for (let i = 0; i < keywords.length; i++) {
+                                        pool.query(
+                                            `SELECT id FROM "keyword" WHERE keyword = $1`,
+                                            [keywords[i]],
+                                            (err, result) => {
+                                                if (err) {
+                                                    console.log(err);
+                                                    keywords_added = false;
+                                                } else if (result.rows.length > 0) {
                                                     pool.query(
-                                                        `SELECT id FROM "keyword" WHERE keyword = $1`,
-                                                        [keywords[i]],
+                                                        `INSERT INTO "keyword_question" (KeywordID, QuestionID)
+                                                                        VALUES ($1, $2)`,
+                                                        [result.rows[0]['id'], question_id],
                                                         (err, result) => {
+                                                            if (err) {
+                                                                keywords_added = false;
+                                                                res.status(400);
+                                                                return res.json({error: "Something went wrong..."});
+                                                            }
+                                                        }
+                                                    );
+                                                } else {
+                                                    pool.query(
+                                                        `INSERT INTO "keyword" (keyword)
+                                                              VALUES ($1)
+                                                              RETURNING id`,
+                                                        [keywords[i]],
+                                                        (err, results) => {
                                                             if (err) {
                                                                 console.log(err);
                                                                 keywords_added = false;
-                                                            } else if (result.rows.length > 0) {
+                                                            } else if (results.rows.length > 0) {
                                                                 pool.query(
                                                                     `INSERT INTO "keyword_question" (KeywordID, QuestionID)
-                                                                                    VALUES ($1, $2)`,
-                                                                    [result.rows[0]['id'], question_id],
+                                                                        VALUES ($1, $2)`,
+                                                                    [results.rows[0]['id'], question_id],
                                                                     (err, result) => {
                                                                         if (err) {
+                                                                            console.log(err);
                                                                             keywords_added = false;
                                                                             res.status(400);
                                                                             return res.json({error: "Something went wrong..."});
@@ -111,47 +125,20 @@ router.post('/create-question/',
                                                                     }
                                                                 );
                                                             } else {
-                                                                pool.query(
-                                                                    `INSERT INTO "keyword" (keyword)
-                                                                          VALUES ($1)
-                                                                          RETURNING id`,
-                                                                    [keywords[i]],
-                                                                    (err, results) => {
-                                                                        if (err) {
-                                                                            console.log(err);
-                                                                            keywords_added = false;
-                                                                        } else if (results.rows.length > 0) {
-                                                                            pool.query(
-                                                                                `INSERT INTO "keyword_question" (KeywordID, QuestionID)
-                                                                                    VALUES ($1, $2)`,
-                                                                                [results.rows[0]['id'], question_id],
-                                                                                (err, result) => {
-                                                                                    if (err) {
-                                                                                        console.log(err);
-                                                                                        keywords_added = false;
-                                                                                        res.status(400);
-                                                                                        return res.json({error: "Something went wrong..."});
-                                                                                    }
-                                                                                }
-                                                                            );
-                                                                        } else {
-                                                                            res.status(400);
-                                                                            return res.json({error: "Something went wrong..."});
-                                                                        }
-                                                                    }
-                                                                );
+                                                                res.status(400);
+                                                                return res.json({error: "Something went wrong..."});
                                                             }
                                                         }
-                                                    )
-                                                }
-                                                if (keywords_added) res.json({success: "Successfully added question " + String(results.rows[0]['title'])});
-                                                else {
-                                                    res.status(400);
-                                                    return res.json({error: "Something went wrong..."});
+                                                    );
                                                 }
                                             }
-                                        }
-                                    );
+                                        )
+                                    }
+                                    if (keywords_added) res.json({success: "Successfully added question " + String(results.rows[0]['title'])});
+                                    else {
+                                        res.status(400);
+                                        return res.json({error: "Something went wrong..."});
+                                    }
                                 }
                             }
                         );
@@ -253,35 +240,22 @@ router.post('/answer-question/',
                         return res.json({error: "Something went wrong..."});
                     }
                     else if (results.rows.length > 0) {
-                        const email = String(req.user.email);
+                        let user_id = req.user.id
                         pool.query(
-                            `SELECT id FROM "User" WHERE email = $1`,
-                            [email],
+                            `INSERT INTO "answer" (answertext, dateanswered, userid, questionid)
+                                VALUES ($1, to_timestamp($2/ 1000.0), $3, $4)
+                                RETURNING id`,
+                            [answer_text, date_answered, user_id, question_id],
                             (err, results) => {
                                 if (err) {
                                     console.log(err);
                                     res.status(400);
-                                    return res.json({error: "Something went wrong..."});
+                                    res.json({error: "Something went wrong..."});
                                 } else {
-                                    let user_id = results.rows[0]['id'];
-                                    pool.query(
-                                        `INSERT INTO "answer" (answertext, dateanswered, userid, questionid)
-                                            VALUES ($1, to_timestamp($2/ 1000.0), $3, $4)
-                                            RETURNING id`,
-                                        [answer_text, date_answered, user_id, question_id],
-                                        (err, results) => {
-                                            if (err) {
-                                                console.log(err);
-                                                res.status(400);
-                                                res.json({error: "Something went wrong..."});
-                                            } else {
-                                                return res.json( { id: results.rows[0]['id'] } )
-                                            }
-                                        }
-                                    )
+                                    return res.json( { id: results.rows[0]['id'] } )
                                 }
                             }
-                        );
+                        )
                     }
                     else {
                         res.status(400);
