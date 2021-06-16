@@ -11,7 +11,7 @@ export default function AnswerQuestion(){
                 <div className='wave wave2'/>
                 <div className='main-page-body'>
                     <div className='title-box'>
-                        <div className='title-box-vertical'>
+                        <div>
                             <Title text='This is the browse answers page.'/>
                             <h2 className='welcome-text'>{text}</h2>
                         </div>

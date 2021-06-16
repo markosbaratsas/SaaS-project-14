@@ -9,7 +9,7 @@ export default function AccountBox() {
 
     return (
         <div className='sign-page-body'>
-            <div className='sign-box question-box'>
+            <div className='sign-box question-box account-info-box'>
                 <div className='account-box'>
                     <UserQuestions />
                     <UserAnswers />

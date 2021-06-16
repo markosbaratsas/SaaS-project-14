@@ -11,7 +11,7 @@ export default function QuestionsPeriod(){
 
                 <div className='main-page-body'>
                     <div className='title-box'>
-                        <div className='title-box-vertical'>
+                        <div>
                             <Title text='This is the questions per period page.'/>
                             <h2 className='welcome-text'>Now displaying number of questions and answers per day for the last week</h2>
                         </div>

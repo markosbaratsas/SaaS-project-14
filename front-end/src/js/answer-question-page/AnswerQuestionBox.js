@@ -151,10 +151,14 @@ export default function AnswerQuestionBox() {
                     <div className='input-div'>
                         <label htmlFor="text">Filter by period</label>
                         <div className='filters-period'>
-                            <h3>From:</h3>
-                            <input type='date' name='date_from' onChange={handleChangePeriod} />
-                            <h3>To:</h3>
-                            <input type='date' name='date_to' onChange={handleChangePeriod} />
+                            <div className='filters-period-column'>
+                                <h3>From:</h3>
+                                <input type='date' name='date_from' onChange={handleChangePeriod} />
+                            </div>
+                            <div className='filters-period-column'>
+                                <h3>To:</h3>
+                                <input type='date' name='date_to' onChange={handleChangePeriod} />
+                            </div>
                         </div>
                     </div>
                     <div className='input-div'>

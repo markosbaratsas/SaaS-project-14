@@ -12,7 +12,7 @@ export default function SignUpPage(){
 
                 <div className='main-page-body'>
                     <div className='title-box'>
-                        <div className='title-box-vertical'>
+                        <div>
                             <Title text='This is the sign up page.'/>
                             <h2 className='welcome-text'>Sign up</h2>
                         </div>

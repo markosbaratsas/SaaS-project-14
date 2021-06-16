@@ -11,7 +11,7 @@ export default function QuestionsKeyword(){
 
                 <div className='main-page-body'>
                     <div className='title-box'>
-                        <div className='title-box-vertical'>
+                        <div>
                             <Title text='This is the questions per keyword page.'/>
                             <h2 className='welcome-text'>Now displaying question per keyword for the top keywords</h2>
                         </div>

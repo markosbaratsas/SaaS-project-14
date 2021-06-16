@@ -10,7 +10,7 @@ export default function AskQuestion(){
 
                 <div className='main-page-body'>
                     <div className='title-box'>
-                        <div className='title-box-vertical'>
+                        <div>
                             <Title text='This is the ask a question page.'/>
                             <h2 className='welcome-text'>Ask a question</h2>
                         </div>

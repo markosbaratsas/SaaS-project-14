@@ -12,7 +12,7 @@ export default function LogInPage(){
 
             <div className='main-page-body'>
                 <div className='title-box'>
-                    <div className='title-box-vertical'>
+                    <div>
                         <Title text='This is the log in page.'/>
                         <h2 className='welcome-text'>Log in</h2>
                     </div>
