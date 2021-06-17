@@ -17,7 +17,7 @@ export default function MainPage(){
                         <Link to='/account' className='link-to'>
                             <img src={icon} className='' alt={'account-icon'} />
                             <h1>
-                                my account
+                                my AskMeAnything
                             </h1>
                         </Link>
                     </div>
