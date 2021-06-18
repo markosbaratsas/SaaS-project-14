@@ -134,16 +134,11 @@ router.post('/sign-up',async function(req, res, next) {
   }
 });
 
-router.get('/test-user',
+router.get('/authenticate',
     passport.authenticate('token', { session: false }),
     function(req, res, next) {
-      res.json({ email: req.user.email });
+      return res.json({ email: req.user.email, id: req.user.id });
     }
 );
-
-router.get('/test-sth', function(req, res, next) {
-  console.log(req.body)
-  res.json({ body: req.body });
-});
 
 module.exports = router;

@@ -12,7 +12,7 @@ export default function AskQuestionBox() {
         let details = {
             method: 'post',
             url: 'http://localhost:3003/create-question/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: question,
         }
         console.log(details)

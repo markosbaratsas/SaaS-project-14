@@ -41,7 +41,7 @@ export default function AnswerQuestionBox() {
             let details = {
                 method: 'post',
                 url: 'http://localhost:3003/answer-question/',
-                headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+                headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
                 data: answer,
             }
             console.log(details)

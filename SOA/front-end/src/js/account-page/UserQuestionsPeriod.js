@@ -32,7 +32,7 @@ export default function UserQuestionsPeriod() {
         let details_question = {
             method: 'post',
             url: 'http://localhost:3004/get-user-questions-per-period/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
         console.log(details_question)
@@ -52,7 +52,7 @@ export default function UserQuestionsPeriod() {
         let details_answer = {
             method: 'post',
             url: 'http://localhost:3004/get-user-answers-per-period/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
         console.log(details_answer)

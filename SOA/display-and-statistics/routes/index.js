@@ -2,10 +2,6 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios')
 
-const passport = require('passport');
-const JWTStrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt;
-
 async function apiCall(method, url, data) {
     return await axios({
         method: method,
@@ -45,16 +41,6 @@ let getDates = function(startDate, endDate) {
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
-passport.use('token', new JWTStrategy(
-    {
-      secretOrKey: process.env.JWT_SECRET,
-      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
-    },
-    function(token, done) {
-      return done(null, { email: token.email, id: token.id });
-    }
-));
 
 router.get('/get-question-and-answers/:id',
     async function(req, res, next) {
@@ -141,91 +127,166 @@ router.post('/get-answers-per-period/',
     })
 
 router.get('/get-user-questions-per-keyword/',
-    passport.authenticate('token', { session: false }),
     async function(req, res, next) {
-      let user_id = req.user.id
-        let results = await apiCall('post', 'http://localhost:3001/get-questions-per-keyword/', {
-            user_id: user_id
+    axios({
+        method: "post",
+        url: 'http://localhost:3005/authenticate/',
+        data: {
+            token: req.headers.authorization
+        }
+    })
+        .then(async (response) => {
+            if (response.data.email) {
+                let user_id = response.data.id
+                let results = await apiCall('post', 'http://localhost:3001/get-questions-per-keyword/', {
+                    user_id: user_id
+                })
+                if (results.questions_per_keyword) return res.json(results)
+                else return res.json({error: "Something went wrong..."});
+            }
+            else return res.json({ error: "Unauthorized" });
         })
-        if(results.questions_per_keyword) return res.json(results)
-        else return res.json({ error: "Something went wrong..." });
+        .catch((err) => {
+            console.log(err)
+            return res.json({ error: "Unauthorized" });
+        })
     })
 
 router.post('/get-user-questions-per-period/',
-    passport.authenticate('token', { session: false }),
     async function(req, res, next) {
-        let user_id = req.user.id
-        let today = new Date()
-        let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))) : new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); //abstract one week to get last week's questions
-        let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))) : today;
-        if (!(date_from >= 0)) {
-            res.status(400);
-            return res.json({error: "Please provide a valid date_from format..." });
+    axios({
+        method: "post",
+        url: 'http://localhost:3005/authenticate/',
+        data: {
+            token: req.headers.authorization
         }
-        if (!(date_to > 0)) {
-            res.status(400);
-            return res.json({error: "Please provide a valid date_to format..." });
-        }
-        let period = getDates(date_from, date_to)
-        let results = await apiCall('post', 'http://localhost:3001/get-questions-per-period/', {
-            date_from: date_from.getTime(),
-            date_to: date_to.getTime(),
-            period: period,
-            user_id: user_id
+    })
+        .then(async (response) => {
+            if (response.data.email) {
+                let user_id = response.data.id
+                let today = new Date()
+                let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))) : new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); //abstract one week to get last week's questions
+                let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))) : today;
+                if (!(date_from >= 0)) {
+                    res.status(400);
+                    return res.json({error: "Please provide a valid date_from format..."});
+                }
+                if (!(date_to > 0)) {
+                    res.status(400);
+                    return res.json({error: "Please provide a valid date_to format..."});
+                }
+                let period = getDates(date_from, date_to)
+                let results = await apiCall('post', 'http://localhost:3001/get-questions-per-period/', {
+                    date_from: date_from.getTime(),
+                    date_to: date_to.getTime(),
+                    period: period,
+                    user_id: user_id
+                })
+                if (results.questions_per_period) return res.json(results)
+                else return res.json({error: "Something went wrong..."});
+            }
+            else return res.json({ error: "Unauthorized" });
         })
-        if(results.questions_per_period) return res.json(results)
-        else return res.json({ error: "Something went wrong..." });
+        .catch((err) => {
+            console.log(err)
+            return res.json({ error: "Unauthorized" });
+        })
     })
 
 router.post('/get-user-answers-per-period/',
-    passport.authenticate('token', { session: false }),
     async function(req, res, next) {
-        let user_id = req.user.id
-        let today = new Date()
-        let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))) : new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); //abstract one week to get last week's questions
-        let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))) : today;
-        if (!(date_from >= 0)) {
-            res.status(400);
-            return res.json({error: "Please provide a valid date_from format..." });
+    axios({
+        method: "post",
+        url: 'http://localhost:3005/authenticate/',
+        data: {
+            token: req.headers.authorization
         }
-        if (!(date_to > 0)) {
-            res.status(400);
-            return res.json({error: "Please provide a valid date_to format..." });
-        }
-        let period = getDates(date_from, date_to)
-        let results = await apiCall('post', 'http://localhost:3001/get-answers-per-period/', {
-            date_from: date_from.getTime(),
-            date_to: date_to.getTime(),
-            period: period,
-            user_id: user_id
+    })
+        .then(async (response) => {
+            if (response.data.email) {
+                let user_id = response.data.id
+                let today = new Date()
+                let date_from = req.body['date_from'] ? (new Date(String(req.body['date_from']))) : new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7); //abstract one week to get last week's questions
+                let date_to = req.body['date_to'] ? (new Date(String(req.body['date_to']))) : today;
+                if (!(date_from >= 0)) {
+                    res.status(400);
+                    return res.json({error: "Please provide a valid date_from format..."});
+                }
+                if (!(date_to > 0)) {
+                    res.status(400);
+                    return res.json({error: "Please provide a valid date_to format..."});
+                }
+                let period = getDates(date_from, date_to)
+                let results = await apiCall('post', 'http://localhost:3001/get-answers-per-period/', {
+                    date_from: date_from.getTime(),
+                    date_to: date_to.getTime(),
+                    period: period,
+                    user_id: user_id
+                })
+                if (results.answers_per_period) return res.json(results)
+                else return res.json({error: "Something went wrong..."});
+            }
+            else return res.json({ error: "Unauthorized" });
         })
-        if(results.answers_per_period) return res.json(results)
-        else return res.json({ error: "Something went wrong..." });
+        .catch((err) => {
+            console.log(err)
+            return res.json({ error: "Unauthorized" });
+        })
     })
 
 router.get('/get-user-questions/',
-    passport.authenticate('token', { session: false }),
     async function(req, res, next) {
-        let user_id = req.user.id
-        let results = await apiCall('post', 'http://localhost:3001/get-questions/', {
-            keywords: [],
-            date_from: 0o000000000000,
-            date_to: 9999999999999,
-            from_user: user_id
+    axios({
+        method: "post",
+        url: 'http://localhost:3005/authenticate/',
+        data: {
+            token: req.headers.authorization
+        }
+    })
+        .then(async (response) => {
+            if (response.data.email) {
+                let user_id = response.data.id
+                let results = await apiCall('post', 'http://localhost:3001/get-questions/', {
+                    keywords: [],
+                    date_from: 0o000000000000,
+                    date_to: 9999999999999,
+                    from_user: user_id
+                })
+                if (results.questions) return res.json(results)
+                else return res.json({error: "Something went wrong..."});
+            }
+            else return res.json({ error: "Unauthorized" });
         })
-        if(results.questions) return res.json(results)
-        else return res.json({ error: "Something went wrong..." });
+        .catch((err) => {
+            console.log(err)
+            return res.json({ error: "Unauthorized" });
+        })
     })
 
 router.get('/get-user-answers/',
-    passport.authenticate('token', { session: false }),
     async function(req, res, next) {
-      let user_id = req.user.id
-        let results = await apiCall('post', 'http://localhost:3001/get-user-answers/', {
-            user_id: user_id
+    axios({
+        method: "post",
+        url: 'http://localhost:3005/authenticate/',
+        data: {
+            token: req.headers.authorization
+        }
+    })
+        .then(async (response) => {
+            if (response.data.email) {
+                let user_id = response.data.id
+                let results = await apiCall('post', 'http://localhost:3001/get-user-answers/', {
+                    user_id: user_id
+                })
+                if (results.answers) return res.json(results)
+                else return res.json({error: "Something went wrong..."});
+            }
+            else return res.json({ error: "Unauthorized" });
         })
-        if(results.answers) return res.json(results)
-        else return res.json({ error: "Something went wrong..." });
+        .catch((err) => {
+            console.log(err)
+            return res.json({ error: "Unauthorized" });
+        })
     })
 
 module.exports = router;

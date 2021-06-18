@@ -23,7 +23,7 @@ export default function UserQuestionsKeyword() {
         let details = {
             method: 'get',
             url: 'http://localhost:3004/get-user-questions-per-keyword/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }
         axios(details)

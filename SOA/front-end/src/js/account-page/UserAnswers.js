@@ -9,7 +9,7 @@ export default function UserAnswers() {
         let details = {
             method: 'get',
             url: 'http://localhost:3004/get-user-answers/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }
         console.log(details)

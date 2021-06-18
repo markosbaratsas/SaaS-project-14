@@ -13,7 +13,7 @@ export default function UserQuestions() {
         let details = {
             method: 'get',
             url: 'http://localhost:3004/get-user-questions/',
-            headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
+            headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }
         console.log(details)
