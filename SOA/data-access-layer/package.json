@@ -1,5 +1,5 @@
 {
-  "name": "display-and-statistics",
+  "name": "data-access-layer",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -9,15 +9,13 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "passport": "^0.4.1",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "axios": "^0.21.1",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "passport-jwt": "^4.0.0",
-    "pug": "^3.0.2"
+    "dotenv": "^10.0.0"
   }
 }
