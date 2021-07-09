@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const axios = require('axios');
 require("dotenv").config();
 
 const { pool } = require("../config/database");
@@ -10,8 +11,8 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 function validEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }
 
 function checkErrors(email, password, password2) {
@@ -50,54 +51,71 @@ passport.use('token', new JWTStrategy(
 ));
 
 router.post('/sign-up',async function(req, res, next) {
-  let email = req.body['email'];
-  let password = req.body['password'];
-  let password2 = req.body['password2'];
+    let email = req.body['email'];
+    let password = req.body['password'];
+    let password2 = req.body['password2'];
 
-  let errors = checkErrors(email, password, password2);
+    let errors = checkErrors(email, password, password2);
 
-  if (errors.length > 0) {
-    res.json({
-      errors: errors,
-      email: email,
-      password: password,
-      password2: password2
-    });
-  }
-  else {
-    let hashedPassword = await bcrypt.hash(password, 10);
-    pool.query(
-        `SELECT * FROM "User" WHERE email = $1`,
-        [email],
-        (err, results) => {
-          if (err) {
-              console.log("HEY")
-            console.log(err);
-          }
-          // check if user with that email already exists
-          else if (results.rows.length > 0) {
-            return res.json({ message: "Email already registered"});
-          } else {
-            pool.query(
-                `INSERT INTO "User" (email, password)
-                        VALUES ($1, $2)
-                        RETURNING id, password`,
-                [email, hashedPassword],
-                (err, results) => {
-                  if (err) {
+    if (errors.length > 0) {
+        res.json({
+            errors: errors,
+            email: email,
+            password: password,
+            password2: password2
+        });
+    }
+    else {
+        let hashedPassword = await bcrypt.hash(password, 10);
+        pool.query(
+            `SELECT * FROM "User" WHERE email = $1`,
+            [email],
+            (err, results) => {
+                if (err) {
                     console.log(err);
-                    res.json({ error: "Something went wrong..." });
-                  }
-                  else {
-                    console.log(results.rows);
-                    res.json({ success: "Successfully registered!" });
-                  }
                 }
-            );
-          }
-        }
-    );
-  }
+                // check if user with that email already exists
+                else if (results.rows.length > 0) {
+                    return res.json({ message: "Email already registered"});
+                } else {
+                    pool.query(
+                        `INSERT INTO "User" (email, password)
+                                VALUES ($1, $2)
+                                RETURNING id, password`,
+                        [email, hashedPassword],
+                        async (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.json({ error: "Something went wrong..." });
+                            }
+                            else {
+                                let details = {
+                                    method: 'post',
+                                    url: 'http://localhost:3003/bus/',
+                                    data: {
+                                        'event': {
+                                            'id': results.rows[0]['id'],
+                                            'email': email,
+                                            'password': hashedPassword
+                                        },
+                                        'channel': 'sign-up'
+                                    }
+                                }
+                                await axios(details)
+                                    .then(() => {
+                                        res.json({ success: "Successfully registered!" });
+                                    })
+                                    .catch((er) => {
+                                        console.log(er);
+                                        res.status(400);
+                                    })
+                            }
+                        }
+                    );
+                }
+            }
+        );
+    }
 });
 
 module.exports = router;

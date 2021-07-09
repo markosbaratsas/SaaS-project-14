@@ -11,6 +11,16 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.6.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport-jwt": "^4.0.0",
+    "redis-connection-pool": "^1.7.4"
   }
 }
