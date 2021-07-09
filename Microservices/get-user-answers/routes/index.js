@@ -37,7 +37,7 @@ router.get('/get-user-answers/',
                             text: row['answer_text'],
                             date: row['date_answered'].toISOString().replace(/T/, ' ').replace(/\..+/, '')}
                     });
-                    return res.json({ questions_per_keyword: answer });
+                    return res.json({ answers: answer });
                 }
             }
         )
