@@ -14,6 +14,8 @@ pool.hset('bus', 'messages', JSON.stringify([]), () => {});
 
 // insert all channels here
 pool.hset('subscribers', 'sign-up', JSON.stringify([]), () => {});
+pool.hset('subscribers', 'create-question', JSON.stringify([]), () => {});
+pool.hset('subscribers', 'answer-question', JSON.stringify([]), () => {});
 
 router.post('/bus', async(req, res) => {
     const event = req.body.event;
