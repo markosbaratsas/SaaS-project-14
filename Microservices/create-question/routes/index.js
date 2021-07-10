@@ -120,6 +120,7 @@ router.post('/create-question/',
                                                     'id': question_id,
                                                     'title': title,
                                                     'QuestionText': QuestionText,
+                                                    'DateAsked': DateAsked,
                                                     'keywords': keywords,
                                                     'user_email': user_email
                                                 },
