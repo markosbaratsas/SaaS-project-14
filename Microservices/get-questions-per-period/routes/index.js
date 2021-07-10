@@ -1,7 +1,34 @@
 var express = require('express');
 var router = express.Router();
+require("dotenv").config();
 
 const { pool } = require("../config/database");
+
+const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_HOST = process.env.REDIS_HOST;
+const redis_pool = require('redis-connection-pool')('myRedisPool', {
+        host: REDIS_HOST,
+        port: REDIS_PORT,
+    }
+);
+
+redis_pool.hget('subscribers', 'create-question', async(err, data) => {
+    let currentSubscribers = JSON.parse(data);
+    let alreadySubscribed = false;
+
+    let myAddress = 'http://localhost:3006/bus';
+    for(let i = 0; i < currentSubscribers.length; i++) {
+        if (currentSubscribers[i] === myAddress)
+            alreadySubscribed = true;
+    }
+    if(alreadySubscribed === false){
+        currentSubscribers.push(myAddress);
+        redis_pool.hset('subscribers', 'create-question', JSON.stringify(currentSubscribers), () => {})
+        console.log("Subscribed");
+    }
+    else
+        console.log("Already subscribed")
+});
 
 function getYYYYMMDD(d0) {
     const d = new Date(d0)
@@ -62,5 +89,48 @@ router.post('/get-questions-per-period/',
             }
         )
     })
+
+router.post('/bus', (req, res) => {
+    let event = req.body.event;
+    let DateAsked = event['DateAsked'];
+    pool.query(
+        `SELECT * FROM question_period WHERE DateAsked = date(to_timestamp($1/ 1000.0))`,
+        [DateAsked],
+        (err, results) => {
+            if (err) {
+                console.log(err);
+                res.status(500);
+                res.json({ error: "Something went wrong..." });
+            }
+            else if(results.rows.length > 0) {
+                pool.query(
+                    `UPDATE question_period
+                        SET count = $1
+                        WHERE DateAsked = date(to_timestamp($2/ 1000.0))`,
+                    [parseInt(results.rows[0]['count']) + 1, DateAsked],
+                    (err, results) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(500);
+                            res.json({error: "Something went wrong..."});
+                        } else res.json({success: "Successfully increased count of date"});
+                    }
+                )
+            } else {
+                pool.query(`INSERT INTO question_period(DateAsked, count) VALUES (date(to_timestamp($1/ 1000.0)), 1)`,
+                    [DateAsked],
+                    (err, results) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(500);
+                            res.json({ error: "Something went wrong..." });
+                        }
+                        else res.json({ success: "Successfully increased count of date" });
+                    }
+                )
+            }
+        }
+    );
+})
 
 module.exports = router;
