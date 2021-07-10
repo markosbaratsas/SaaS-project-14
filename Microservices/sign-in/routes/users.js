@@ -12,8 +12,8 @@ const jwt = require('jsonwebtoken');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
-const REDIS_PORT = 6379;
-const REDIS_HOST = "localhost";
+const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_HOST = process.env.REDIS_HOST;
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
         host: REDIS_HOST,
         port: REDIS_PORT,
@@ -24,7 +24,7 @@ redis_pool.hget('subscribers', 'sign-up', async(err, data) => {
     let currentSubscribers = JSON.parse(data);
     let alreadySubscribed = false;
 
-    let myAddress = 'http://localhost:3000/bus';
+    let myAddress = process.env.MY_ADDRESS;
     for(let i = 0; i < currentSubscribers.length; i++) {
         if (currentSubscribers[i] === myAddress)
             alreadySubscribed = true;

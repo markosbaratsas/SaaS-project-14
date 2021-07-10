@@ -16,7 +16,7 @@ redis_pool.hget('subscribers', 'create-question', async(err, data) => {
     let currentSubscribers = JSON.parse(data);
     let alreadySubscribed = false;
 
-    let myAddress = 'http://localhost:3006/bus';
+    let myAddress = process.env.MY_ADDRESS;
     for(let i = 0; i < currentSubscribers.length; i++) {
         if (currentSubscribers[i] === myAddress)
             alreadySubscribed = true;

@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios');
 
-const REDIS_PORT = 6379;
-const REDIS_HOST = "localhost";
+const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_HOST = process.env.REDIS_HOST;
 const pool = require('redis-connection-pool')('myRedisPool', {
       host: REDIS_HOST,
       port: REDIS_PORT,
@@ -41,7 +41,7 @@ router.post('/bus', async(req, res) => {
                     axios.post(subscribers[i], newMessage)
                         .then(resp => {
                             console.log(subscribers[i], resp['data']);
-                            if (i == subscribers.length -1) res.send({ "status": "ok"})
+                            if (i === subscribers.length -1) res.send({ "status": "ok"})
                         })
                         .catch(e => {
                             console.log(subscribers[i], { "status": "Lost connection"});
