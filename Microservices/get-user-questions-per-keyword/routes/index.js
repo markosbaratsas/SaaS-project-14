@@ -7,6 +7,30 @@ const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 const { pool } = require("../config/database");
 
+const redis_pool = require('redis-connection-pool')('myRedisPool', {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+    }
+);
+
+redis_pool.hget('subscribers', 'create-question', async(err, data) => {
+    let currentSubscribers = JSON.parse(data);
+    let alreadySubscribed = false;
+
+    let myAddress = process.env.MY_ADDRESS;
+    for(let i = 0; i < currentSubscribers.length; i++) {
+        if (currentSubscribers[i] === myAddress)
+            alreadySubscribed = true;
+    }
+    if(alreadySubscribed === false){
+        currentSubscribers.push(myAddress);
+        redis_pool.hset('subscribers', 'create-question', JSON.stringify(currentSubscribers), () => {})
+        console.log("Subscribed");
+    }
+    else
+        console.log("Already subscribed")
+});
+
 passport.use('token', new JWTStrategy(
     {
         secretOrKey: process.env.JWT_SECRET,
@@ -39,5 +63,55 @@ router.get('/get-user-questions-per-keyword/',
             }
         )
     });
+
+
+router.post('/bus', (req, res) => {
+    let event = req.body.event;
+    let keywords = event['keywords'] ? event['keywords'] : [];
+    let user_email = event['user_email'];
+
+    for (let i = 0; i < keywords.length; i++) {
+        pool.query(
+            `SELECT * FROM user_question_keyword WHERE keyword = $1`,
+            [keywords[i]],
+            (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500);
+                    res.json({ error: "Something went wrong..." });
+                }
+                else if(results.rows.length > 0) {
+                    pool.query(
+                        `UPDATE user_question_keyword
+                        SET count = $1
+                        WHERE keyword = $2 AND user_email = $3`,
+                        [parseInt(results.rows[0]['count']) + 1, keywords[i], user_email],
+                        (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500);
+                                res.json({error: "Something went wrong..."});
+                            } else if (i === (keywords.length - 1)) res.json({success: "Successfully increased count of date"});
+                        }
+                    )
+                } else {
+                    pool.query(`INSERT INTO user_question_keyword (keyword, count, user_email)
+                                VALUES ($1, 1, $2)`,
+                        [keywords[i], user_email],
+                        (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500);
+                                res.json({ error: "Something went wrong..." });
+                            }
+                            else if (i === (keywords.length - 1)) res.json({ success: "Successfully increased count of date" });
+                        }
+                    )
+                }
+            }
+        );
+    }
+});
+
 
 module.exports = router;
