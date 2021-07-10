@@ -13,7 +13,7 @@ redis_pool.hget('subscribers', 'create-question', async(err, data) => {
     let currentSubscribers = JSON.parse(data);
     let alreadySubscribed = false;
 
-    let myAddress = 'http://localhost:3002/bus';
+    let myAddress = process.env.MY_ADDRESS;
     for(let i = 0; i < currentSubscribers.length; i++) {
         if (currentSubscribers[i] === myAddress)
             alreadySubscribed = true;
@@ -21,6 +21,24 @@ redis_pool.hget('subscribers', 'create-question', async(err, data) => {
     if(alreadySubscribed === false){
         currentSubscribers.push(myAddress);
         redis_pool.hset('subscribers', 'create-question', JSON.stringify(currentSubscribers), () => {})
+        console.log("Subscribed");
+    }
+    else
+        console.log("Already subscribed")
+});
+
+redis_pool.hget('subscribers', 'answer-question', async(err, data) => {
+    let currentSubscribers = JSON.parse(data);
+    let alreadySubscribed = false;
+
+    let myAddress = process.env.MY_ADDRESS;
+    for(let i = 0; i < currentSubscribers.length; i++) {
+        if (currentSubscribers[i] === myAddress)
+            alreadySubscribed = true;
+    }
+    if(alreadySubscribed === false){
+        currentSubscribers.push(myAddress);
+        redis_pool.hset('subscribers', 'answer-question', JSON.stringify(currentSubscribers), () => {})
         console.log("Subscribed");
     }
     else
@@ -181,6 +199,48 @@ router.post('/bus', (req, res) => {
                 }
             }
         );
+    }
+    else if (channel == "answer-question") {
+        let answer_id = event['id'];
+        let answer_text = event['answer_text'];
+        let date_answered = event['date_answered'];
+        let question_id = event['question_id'];
+        let user_email = event['user_email'];
+
+        pool.query(
+            `SELECT * FROM "question" WHERE id = $1`,
+            [question_id],
+            (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(400);
+                    return res.json({error: "Something went wrong..."});
+                }
+                else if (results.rows.length > 0) {
+                    pool.query(
+                        `INSERT INTO "answer" (id, answertext, dateanswered, useremail, questionid)
+                                VALUES ($1, $2, to_timestamp($3/ 1000.0), $4, $5)
+                                RETURNING id`,
+                        [answer_id, answer_text, date_answered, user_email, question_id],
+                        (err, results) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(400);
+                                res.json({error: "Something went wrong..."});
+                            } else {
+                                return res.json( { id: results.rows[0]['id'] } )
+                            }
+                        }
+                    )
+                }
+                else {
+                    res.status(400);
+                    return res.json({error: "No question with id = " + String(question_id)});
+                }
+            }
+        )
+
+
     }
 });
 
