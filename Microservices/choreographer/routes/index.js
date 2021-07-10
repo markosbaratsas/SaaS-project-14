@@ -38,6 +38,7 @@ router.post('/bus', async(req, res) => {
                 let subscribers = JSON.parse(data);
 
                 for(let i = 0; i < subscribers.length; i++) {
+                    console.log("Informing: " + subscribers[i]);
                     axios.post(subscribers[i], newMessage)
                         .then(resp => {
                             console.log(subscribers[i], resp['data']);
