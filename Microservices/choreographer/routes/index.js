@@ -41,13 +41,13 @@ router.post('/bus', async(req, res) => {
                     axios.post(subscribers[i], newMessage)
                         .then(resp => {
                             console.log(subscribers[i], resp['data']);
+                            if (i == subscribers.length -1) res.send({ "status": "ok"})
                         })
                         .catch(e => {
                             console.log(subscribers[i], { "status": "Lost connection"});
                             res.status(400);
                         })
                 }
-                res.send({ "status": "ok"})
             })
         })
     })
