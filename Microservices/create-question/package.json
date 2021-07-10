@@ -11,9 +11,13 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "passport": "^0.4.1",
+    "pg": "^8.6.0",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
+    "passport-jwt": "^4.0.0"
   }
 }
