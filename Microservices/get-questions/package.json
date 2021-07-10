@@ -15,6 +15,7 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "redis-connection-pool": "^1.7.4"
   }
 }
