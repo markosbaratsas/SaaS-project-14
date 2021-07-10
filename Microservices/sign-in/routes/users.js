@@ -100,6 +100,7 @@ router.post('/bus', (req, res) => {
         async (err, results) => {
             if (err) {
                 console.log(err);
+                res.status(500);
                 res.json({ error: "Something went wrong..." });
             }
             else {
