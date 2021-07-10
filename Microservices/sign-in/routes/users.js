@@ -3,6 +3,15 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+const { pool } = require("../config/database");
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+const jwt = require('jsonwebtoken');
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJWT = require('passport-jwt').ExtractJwt;
+
 const REDIS_PORT = 6379;
 const REDIS_HOST = "localhost";
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
@@ -27,16 +36,7 @@ redis_pool.hget('subscribers', 'sign-up', async(err, data) => {
         }
         else
             console.log("Already subscribed")
-})
-
-const { pool } = require("../config/database");
-
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-
-const jwt = require('jsonwebtoken');
-const JWTStrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt;
+});
 
 passport.use('signIn', new LocalStrategy(function(email, password, done) {
     pool.query(
