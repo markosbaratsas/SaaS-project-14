@@ -3,6 +3,30 @@ var router = express.Router();
 
 const { pool } = require("../config/database");
 
+const redis_pool = require('redis-connection-pool')('myRedisPool', {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+    }
+);
+
+redis_pool.hget('subscribers', 'create-question', async(err, data) => {
+    let currentSubscribers = JSON.parse(data);
+    let alreadySubscribed = false;
+
+    let myAddress = 'http://localhost:3002/bus';
+    for(let i = 0; i < currentSubscribers.length; i++) {
+        if (currentSubscribers[i] === myAddress)
+            alreadySubscribed = true;
+    }
+    if(alreadySubscribed === false){
+        currentSubscribers.push(myAddress);
+        redis_pool.hset('subscribers', 'create-question', JSON.stringify(currentSubscribers), () => {})
+        console.log("Subscribed");
+    }
+    else
+        console.log("Already subscribed")
+});
+
 router.get('/get-question-and-answers/:id',
     function(req, res, next) {
         let question_id = req.params.id;
@@ -73,6 +97,91 @@ router.get('/get-question-and-answers/:id',
             }
         )
     }
-)
+);
+
+
+
+router.post('/bus', (req, res) => {
+    let event = req.body.event;
+    let channel = req.body.channel;
+    if (channel == "create-question") {
+        let keywords = event['keywords'] ? event['keywords'] : [];
+        console.log(keywords);
+        pool.query(
+            `INSERT INTO question (id, title, questiontext, dateasked, useremail)
+             VALUES ($1, $2, $3, to_timestamp($4/ 1000.0), $5)
+             RETURNING title, id`,
+            [event['id'], event['title'], event['QuestionText'], event['DateAsked'], event['user_email']],
+            async (err, results) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500);
+                    res.json({ error: "Something went wrong..." });
+                }
+                else {
+                    let question_id = results.rows[0]['id'];
+                    let keywords_added = true;
+                    for (let i = 0; i < keywords.length; i++) {
+                        pool.query(
+                            `SELECT id
+                            FROM "keyword"
+                            WHERE keyword = $1`,
+                            [keywords[i]],
+                            (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                    keywords_added = false;
+                                } else if (result.rows.length > 0) {
+                                    pool.query(
+                                        `INSERT INTO "question_keyword" (KeywordID, QuestionID)
+                                         VALUES ($1, $2)`,
+                                        [result.rows[0]['id'], question_id],
+                                        (err, result) => {
+                                            if (err) {
+                                                keywords_added = false;
+                                            }
+                                        }
+                                    );
+                                } else {
+                                    pool.query(
+                                        `INSERT INTO "keyword" (keyword)
+                                         VALUES ($1)
+                                         RETURNING id`,
+                                        [keywords[i]],
+                                        (err, results) => {
+                                            if (err) {
+                                                console.log(err);
+                                                keywords_added = false;
+                                            } else if (results.rows.length > 0) {
+                                                pool.query(
+                                                    `INSERT INTO "question_keyword" (KeywordID, QuestionID)
+                                                     VALUES ($1, $2)`,
+                                                    [results.rows[0]['id'], question_id],
+                                                    (err, result) => {
+                                                        if (err) {
+                                                            console.log(err);
+                                                            keywords_added = false;
+                                                        }
+                                                    }
+                                                );
+                                            } else {
+                                                res.json({ error: "Something went wrong..." });
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        )
+                    }
+                    if (keywords_added) res.json({ results: "Successfully added question with title: " + String(results.rows[0]['title']) });
+                    else {
+                        res.status(400);
+                        return res.json({ error: "Something went wrong..." });
+                    }
+                }
+            }
+        );
+    }
+});
 
 module.exports = router;
