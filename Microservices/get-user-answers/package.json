@@ -10,6 +10,7 @@
   "devDependencies": {
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "redis-connection-pool": "^1.7.4"
   }
 }
