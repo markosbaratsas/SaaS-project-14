@@ -4,8 +4,8 @@ require("dotenv").config();
 
 const { pool } = require("../config/database");
 
-const REDIS_PORT = 6379//process.env.REDIS_PORT;
-const REDIS_HOST = "localhost"//process.env.REDIS_HOST;
+const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_HOST = process.env.REDIS_HOST;
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
         host: REDIS_HOST,
         port: REDIS_PORT,
@@ -132,6 +132,5 @@ router.post('/bus', (req, res) => {
         }
     );
 })
-
 
 module.exports = router;
