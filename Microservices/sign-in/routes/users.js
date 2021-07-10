@@ -12,11 +12,8 @@ const jwt = require('jsonwebtoken');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
-const REDIS_PORT = process.env.REDIS_PORT;
-const REDIS_HOST = process.env.REDIS_HOST;
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        host: REDIS_HOST,
-        port: REDIS_PORT,
+        url: REDIS_URL
     }
 );
 

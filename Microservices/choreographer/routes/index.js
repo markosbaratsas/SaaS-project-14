@@ -2,10 +2,8 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios');
 
-const REDIS_PORT = process.env.REDIS_PORT;
-const REDIS_HOST = process.env.REDIS_HOST;
 const pool = require('redis-connection-pool')('myRedisPool', {
-      host: REDIS_HOST,
+      url: REDIS_URL
       port: REDIS_PORT,
     }
 );
