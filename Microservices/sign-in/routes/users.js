@@ -13,7 +13,8 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        url: REDIS_URL
+        url: process.env.REDIS_URL,
+        maxclients: 19
     }
 );
 
@@ -89,6 +90,7 @@ router.post('/sign-in',
 
 router.post('/bus', (req, res) => {
     let event = req.body.event;
+    console.log("at bus: " + event['id'] + " " + event['email'] + " " + event['password']);
     pool.query(
         `INSERT INTO "User" (id, email, password)
                                 VALUES ($1, $2, $3)

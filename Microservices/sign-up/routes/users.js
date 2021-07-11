@@ -91,7 +91,7 @@ router.post('/sign-up',async function(req, res, next) {
                             else {
                                 let details = {
                                     method: 'post',
-                                    url: 'http://localhost:3003/bus/',
+                                    url: process.env.CHOREOGRAPHER_URL,
                                     data: {
                                         'event': {
                                             'id': results.rows[0]['id'],
@@ -109,6 +109,7 @@ router.post('/sign-up',async function(req, res, next) {
                                         console.log(er);
                                         res.status(400);
                                     })
+                                    res.json({ success: "Successfully registered!" });
                             }
                         }
                     );
