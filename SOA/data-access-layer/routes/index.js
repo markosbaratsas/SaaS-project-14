@@ -356,6 +356,7 @@ router.post('/get-user-answers/',
                         answers.push({ question: results.rows[i]['questiontext'], text: results.rows[i]['answertext'], date: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, '')});
                         if(++answers_added === total_answers) return res.json( {answers: answers});
                     }
+                    if(total_answers === 0) return res.json( {answers: answers});
                 }
             }
         )
