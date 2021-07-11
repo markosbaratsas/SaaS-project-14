@@ -11,7 +11,7 @@ export default function AskQuestionBox() {
         e.preventDefault();
         let details = {
             method: 'post',
-            url: 'http://localhost:3000/create-question/',
+            url: process.env.REACT_APP_URL + 'create-question/',
             headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
             data: question,
         }
@@ -19,7 +19,10 @@ export default function AskQuestionBox() {
         axios(details)
             .then( (response) => {
                 console.log(response);
-                if(response.data.error) alert("There's already a question with this title!")
+                if(response.data.error){
+                    console.log(response.data.error)
+                    alert(response.data.error)
+                }
                 else if(response.data.success){
                     alert(response.data.success);
                     history.push("/");

@@ -2,7 +2,7 @@ import Title from "../Title";
 import AnswerQuestionBox from "./AnswerQuestionBox";
 
 export default function AnswerQuestion(){
-    const text = JSON.parse(localStorage.getItem("token")) === null ? "You can see up to 10 questions. Sign up to see more!" : "Answer a question"
+    const text = JSON.parse(localStorage.getItem("token")) === null ? "You can see up to 10 questions. Sign up to see more!" : "Answer a question, or simply browse questions based on filters!"
 
     return (
         <div className="total-wrapper">
@@ -12,7 +12,7 @@ export default function AnswerQuestion(){
                 <div className='main-page-body'>
                     <div className='title-box'>
                         <div>
-                            <Title text='This is the browse answers page.'/>
+                            <Title text='Here, you can browse questions and answers.'/>
                             <h2 className='welcome-text'>{text}</h2>
                         </div>
                     </div>

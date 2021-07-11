@@ -24,7 +24,7 @@ export default function KeywordsBox() {
     useEffect(() => {
         let details = {
             method: 'get',
-            url: 'http://localhost:3000/get-questions-per-keyword/',
+            url: process.env.REACT_APP_URL + 'get-questions-per-keyword/',
             data: {},
         }
         axios(details)

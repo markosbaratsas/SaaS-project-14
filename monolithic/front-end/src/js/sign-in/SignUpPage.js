@@ -14,7 +14,7 @@ export default function SignUpPage(){
                     <div className='title-box'>
                         <div>
                             <Title text='This is the sign up page.'/>
-                            <h2 className='welcome-text'>Sign up</h2>
+                            <h2 className='welcome-text'>Sign up to ask and answer questions, and have unlimited access to all questions.</h2>
                         </div>
                     </div>
                     <SignBox/>
