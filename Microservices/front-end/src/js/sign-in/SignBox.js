@@ -12,7 +12,7 @@ export default function SignBox(props) {
         e.preventDefault();
         let details = {
             method: 'post',
-            url: 'http://localhost:3001/sign-up',
+            url: 'https://microservices-sign-up.herokuapp.com/sign-up',
             data: user,
         }
         axios(details)
