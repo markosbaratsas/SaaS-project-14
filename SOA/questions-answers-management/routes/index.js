@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
+require("dotenv").config();
 
 async function apiCall(method, url, data) {
     return await axios({
@@ -26,7 +27,7 @@ router.post('/create-question/',
     async function(req, res, next) {
         axios({
             method: "post",
-            url: 'http://localhost:3005/authenticate/',
+            url: process.env.ESB_URL + 'authenticate/',
             data: {
                 token: req.headers.authorization
             }
@@ -43,7 +44,7 @@ router.post('/create-question/',
                     }
                     else {
                         let user_id = response.data.id
-                        let results = await apiCall('post', 'http://localhost:3001/create-question', {
+                        let results = await apiCall('post', process.env.DATA_URL + 'create-question', {
                             title: title,
                             QuestionText: QuestionText,
                             keywords: keywords,
@@ -58,7 +59,7 @@ router.post('/create-question/',
             })
             .catch((err) => {
                 console.log(err)
-                return res.json({ error: "Unauthorized" });
+                return res.json({ error: "error" });
             })
     });
 
@@ -66,7 +67,7 @@ router.post('/answer-question/',
     async function(req, res, next) {
         axios({
             method: "post",
-            url: 'http://localhost:3005/authenticate/',
+            url: process.env.ESB_URL + 'authenticate/',
             data: {
                 token: req.headers.authorization
             }
@@ -81,7 +82,7 @@ router.post('/answer-question/',
                         return res.json({error: "Please provide all fields"});
                     } else {
                         let user_id = response.data.id
-                        let results = await apiCall('post', 'http://localhost:3001/answer-question', {
+                        let results = await apiCall('post', process.env.DATA_URL + 'answer-question', {
                             question_id: question_id,
                             answer_text: answer_text,
                             date_answered: date_answered,
