@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require("axios");
+require("dotenv").config();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,7 +12,7 @@ router.post('/authenticate',
     async function(req, res, next) {
         axios({
             method: 'get',
-            url: 'http://localhost:3002/authenticate/',
+            url: process.env.AUTHENTICATOR_URL + 'authenticate/',
             headers: { Authorization: `Bearer ` + req.body["token"] }
         })
             .then((response) => {

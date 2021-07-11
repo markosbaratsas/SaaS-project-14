@@ -22,8 +22,8 @@ export default function MainPage(){
                         </Link>
                     </div>
                     <div className='title-box-vertical'>
-                        <Title text='This is the main page.'/>
-                        <h2 className='welcome-text'>Welcome to AskMeAnything</h2>
+                        <Title text='Welcome to AskMeAnything'/>
+                        <h2 className='welcome-text'>Watch statistics, ask questions and browse answers from users all around the world!</h2>
                     </div>
                     <SignButton />
                 </div>

@@ -14,7 +14,7 @@ export default function LogInPage(){
                 <div className='title-box'>
                     <div>
                         <Title text='This is the log in page.'/>
-                        <h2 className='welcome-text'>Log in</h2>
+                        <h2 className='welcome-text'>Log in to ask and answer questions, and have unlimited access to all questions.</h2>
                     </div>
                 </div>
                 <LogInBox/>

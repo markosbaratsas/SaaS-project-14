@@ -57,7 +57,7 @@ function checkErrors(email, password, password2) {
 
 passport.use('signIn', new LocalStrategy(
     async function(email, password, done) {
-        let results = await apiCall('post', 'http://localhost:3001/sign-in', {
+        let results = await apiCall('post', process.env.DATA_URL + 'sign-in', {
             email: email
         })
         if(results.rows) {
@@ -123,13 +123,14 @@ router.post('/sign-up',async function(req, res, next) {
   }
   else {
     let hashedPassword = await bcrypt.hash(password, 10);
-    let results = await apiCall('post', 'http://localhost:3001/sign-up', {
+    let results = await apiCall('post', process.env.DATA_URL + 'sign-up', {
         email: email,
         password: hashedPassword
     })
       if(results === "Email already registered") return res.json({ message: "Email already registered"});
       else if(results === "Successfully registered!") res.json({ success: "Successfully registered!" });
-        else res.json({ error: "Something went wrong..." });
+
+      else res.json({ error: "Something went wrong..." });
 
   }
 });

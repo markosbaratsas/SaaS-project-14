@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios')
+require("dotenv").config();
 
 async function apiCall(method, url, data) {
     return await axios({
@@ -45,7 +46,7 @@ router.get('/', function(req, res, next) {
 router.get('/get-question-and-answers/:id',
     async function(req, res, next) {
         let question_id = req.params.id;
-        let results = await apiCall('get', 'http://localhost:3001/get-question-and-answers/' + question_id, {})
+        let results = await apiCall('get', process.env.DATA_URL + 'get-question-and-answers/' + question_id, {})
         if(results.id) return res.json(results)
         else return res.json( { error: 'Something went wrong...' } );
     }
@@ -64,7 +65,7 @@ router.post('/get-questions/',
             res.status(400);
             return res.json({error: "Please provide a valid date_to format..." });
         }
-        let results = await apiCall('post', 'http://localhost:3001/get-questions/', {
+        let results = await apiCall('post', process.env.DATA_URL + 'get-questions/', {
             keywords: keywords,
             date_from: date_from,
             date_to: date_to
@@ -75,7 +76,7 @@ router.post('/get-questions/',
 
 router.get('/get-questions-per-keyword/',
     async function(req, res, next) {
-        let results = await apiCall('post', 'http://localhost:3001/get-questions-per-keyword/', {})
+        let results = await apiCall('post', process.env.DATA_URL + 'get-questions-per-keyword/', {})
         if(results.questions_per_keyword) return res.json(results)
         else return res.json({ error: "Something went wrong..." });
     })
@@ -94,7 +95,7 @@ router.post('/get-questions-per-period/',
             return res.json({error: "Please provide a valid date_to format..." });
         }
         let period = getDates(date_from, date_to)
-        let results = await apiCall('post', 'http://localhost:3001/get-questions-per-period/', {
+        let results = await apiCall('post', process.env.DATA_URL + 'get-questions-per-period/', {
             date_from: date_from.getTime(),
             date_to: date_to.getTime(),
             period: period
@@ -117,7 +118,7 @@ router.post('/get-answers-per-period/',
             return res.json({error: "Please provide a valid date_to format..." });
         }
         let period = getDates(date_from, date_to)
-        let results = await apiCall('post', 'http://localhost:3001/get-answers-per-period/', {
+        let results = await apiCall('post', process.env.DATA_URL + 'get-answers-per-period/', {
             date_from: date_from.getTime(),
             date_to: date_to.getTime(),
             period: period
@@ -130,7 +131,7 @@ router.get('/get-user-questions-per-keyword/',
     async function(req, res, next) {
     axios({
         method: "post",
-        url: 'http://localhost:3005/authenticate/',
+        url: process.env.ESB_URL + 'authenticate/',
         data: {
             token: req.headers.authorization
         }
@@ -138,7 +139,7 @@ router.get('/get-user-questions-per-keyword/',
         .then(async (response) => {
             if (response.data.email) {
                 let user_id = response.data.id
-                let results = await apiCall('post', 'http://localhost:3001/get-questions-per-keyword/', {
+                let results = await apiCall('post', process.env.DATA_URL + 'get-questions-per-keyword/', {
                     user_id: user_id
                 })
                 if (results.questions_per_keyword) return res.json(results)
@@ -156,7 +157,7 @@ router.post('/get-user-questions-per-period/',
     async function(req, res, next) {
     axios({
         method: "post",
-        url: 'http://localhost:3005/authenticate/',
+        url: process.env.ESB_URL + 'authenticate/',
         data: {
             token: req.headers.authorization
         }
@@ -176,7 +177,7 @@ router.post('/get-user-questions-per-period/',
                     return res.json({error: "Please provide a valid date_to format..."});
                 }
                 let period = getDates(date_from, date_to)
-                let results = await apiCall('post', 'http://localhost:3001/get-questions-per-period/', {
+                let results = await apiCall('post', process.env.DATA_URL + 'get-questions-per-period/', {
                     date_from: date_from.getTime(),
                     date_to: date_to.getTime(),
                     period: period,
@@ -197,7 +198,7 @@ router.post('/get-user-answers-per-period/',
     async function(req, res, next) {
     axios({
         method: "post",
-        url: 'http://localhost:3005/authenticate/',
+        url: process.env.ESB_URL + 'authenticate/',
         data: {
             token: req.headers.authorization
         }
@@ -217,7 +218,7 @@ router.post('/get-user-answers-per-period/',
                     return res.json({error: "Please provide a valid date_to format..."});
                 }
                 let period = getDates(date_from, date_to)
-                let results = await apiCall('post', 'http://localhost:3001/get-answers-per-period/', {
+                let results = await apiCall('post', process.env.DATA_URL + 'get-answers-per-period/', {
                     date_from: date_from.getTime(),
                     date_to: date_to.getTime(),
                     period: period,
@@ -238,7 +239,7 @@ router.get('/get-user-questions/',
     async function(req, res, next) {
     axios({
         method: "post",
-        url: 'http://localhost:3005/authenticate/',
+        url: process.env.ESB_URL + 'authenticate/',
         data: {
             token: req.headers.authorization
         }
@@ -246,7 +247,7 @@ router.get('/get-user-questions/',
         .then(async (response) => {
             if (response.data.email) {
                 let user_id = response.data.id
-                let results = await apiCall('post', 'http://localhost:3001/get-questions/', {
+                let results = await apiCall('post', process.env.DATA_URL + 'get-questions/', {
                     keywords: [],
                     date_from: 0o000000000000,
                     date_to: 9999999999999,
@@ -267,7 +268,7 @@ router.get('/get-user-answers/',
     async function(req, res, next) {
     axios({
         method: "post",
-        url: 'http://localhost:3005/authenticate/',
+        url: process.env.ESB_URL + 'authenticate/',
         data: {
             token: req.headers.authorization
         }
@@ -275,7 +276,7 @@ router.get('/get-user-answers/',
         .then(async (response) => {
             if (response.data.email) {
                 let user_id = response.data.id
-                let results = await apiCall('post', 'http://localhost:3001/get-user-answers/', {
+                let results = await apiCall('post', process.env.DATA_URL + 'get-user-answers/', {
                     user_id: user_id
                 })
                 if (results.answers) return res.json(results)

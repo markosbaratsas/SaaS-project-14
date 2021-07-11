@@ -20,7 +20,7 @@ export default function AnswerQuestionBox() {
     useEffect(() => {
         let details = {
             method: 'post',
-            url: 'http://localhost:3000/get-questions/',
+            url: process.env.REACT_APP_URL + 'get-questions/',
             data: {},
         }
         console.log(details)
@@ -40,7 +40,7 @@ export default function AnswerQuestionBox() {
         else {
             let details = {
                 method: 'post',
-                url: 'http://localhost:3000/answer-question/',
+                url: process.env.REACT_APP_URL + 'answer-question/',
                 headers: { Authorization: `Bearer ` + JSON.parse(localStorage.getItem('token')) },
                 data: answer,
             }
@@ -64,7 +64,7 @@ export default function AnswerQuestionBox() {
         if(name === 'questionID' && value !== "-1") {
             let details = {
                 method: 'get',
-                url: 'http://localhost:3000/get-question-and-answers/'+value
+                url: process.env.REACT_APP_URL + 'get-question-and-answers/'+value
             }
             axios(details)
                 .then( (response) => {
@@ -97,7 +97,7 @@ export default function AnswerQuestionBox() {
         setAnswers([])
         let details = {
             method: 'post',
-            url: 'http://localhost:3000/get-questions/',
+            url: process.env.REACT_APP_URL + 'get-questions/',
             data: { keywords: filterKeywords,
                 date_from: dateFrom,
                 date_to: dateTo
@@ -116,7 +116,7 @@ export default function AnswerQuestionBox() {
         e.preventDefault()
         let details = {
             method: 'post',
-            url: 'http://localhost:3000/get-questions/',
+            url: process.env.REACT_APP_URL + 'get-questions/',
             data: {}
         }
         axios(details)

@@ -32,7 +32,7 @@ export default function PeriodBox() {
         let dateFrom = new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() - 7)
         let details_question = {
             method: 'post',
-            url: 'http://localhost:3000/get-questions-per-period/',
+            url: process.env.REACT_APP_URL + 'get-questions-per-period/',
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
         console.log(details_question)
@@ -51,7 +51,7 @@ export default function PeriodBox() {
 
         let details_answer = {
             method: 'post',
-            url: 'http://localhost:3000/get-answers-per-period/',
+            url: process.env.REACT_APP_URL + 'get-answers-per-period/',
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
         console.log(details_answer)

@@ -12,7 +12,7 @@ export default function LogInBox() {
         e.preventDefault()
         let details = {
             method: 'post',
-            url: 'http://localhost:3002/sign-in',
+            url: process.env.REACT_APP_AUTHENTICATOR_URL + 'sign-in',
             data: user,
         }
         axios(details)

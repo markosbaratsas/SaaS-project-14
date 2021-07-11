@@ -24,12 +24,12 @@ export default function KeywordsBox() {
     useEffect(() => {
         let details = {
             method: 'get',
-            url: 'http://localhost:3004/get-questions-per-keyword/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-questions-per-keyword',
             data: {},
         }
         axios(details)
             .then( (response) => {
-                // setQuestions(response.data['questions'])
+                console.log(response)
                 let i = 0;
                 let j = 0;
                 setKeywords(response.data.questions_per_keyword.filter((item) => {
