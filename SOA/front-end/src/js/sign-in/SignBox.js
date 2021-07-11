@@ -6,13 +6,12 @@ import { useAuth } from "../context/auth";
 export default function SignBox(props) {
     const [user, setUser] = useState({})
     const [isLoggedIn, setLoggedIn] = useState(false)
-    const { setAuthTokens } = useAuth()
 
     const handleSubmit = (e) => {
         e.preventDefault();
         let details = {
             method: 'post',
-            url: 'http://localhost:3002/sign-up',
+            url: process.env.REACT_APP_AUTHENTICATOR_URL + 'sign-up',
             data: user,
         }
         axios(details)

@@ -12,7 +12,7 @@ export default function UserQuestions() {
     useEffect(() => {
         let details = {
             method: 'get',
-            url: 'http://localhost:3004/get-user-questions/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-user-questions/',
             headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }
@@ -31,7 +31,7 @@ export default function UserQuestions() {
         if(name === 'questionID') {
             let details = {
                 method: 'get',
-                url: 'http://localhost:3004/get-question-and-answers/'+value
+                url: process.env.REACT_APP_DISPLAY_URL + 'get-question-and-answers/'+value
             }
             axios(details)
                 .then( (response) => {

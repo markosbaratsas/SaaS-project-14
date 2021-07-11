@@ -31,7 +31,7 @@ export default function UserQuestionsPeriod() {
         let dateFrom = new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() - 7)
         let details_question = {
             method: 'post',
-            url: 'http://localhost:3004/get-user-questions-per-period/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-user-questions-per-period/',
             headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }
@@ -51,7 +51,7 @@ export default function UserQuestionsPeriod() {
 
         let details_answer = {
             method: 'post',
-            url: 'http://localhost:3004/get-user-answers-per-period/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-user-answers-per-period/',
             headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: { 'date-from': dateFrom, 'date-to': dateTo },
         }

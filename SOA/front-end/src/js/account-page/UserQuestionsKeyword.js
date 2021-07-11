@@ -22,7 +22,7 @@ export default function UserQuestionsKeyword() {
     useEffect(() => {
         let details = {
             method: 'get',
-            url: 'http://localhost:3004/get-user-questions-per-keyword/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-user-questions-per-keyword/',
             headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }

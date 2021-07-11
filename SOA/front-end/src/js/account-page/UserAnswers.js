@@ -8,7 +8,7 @@ export default function UserAnswers() {
     useEffect(() => {
         let details = {
             method: 'get',
-            url: 'http://localhost:3004/get-user-answers/',
+            url: process.env.REACT_APP_DISPLAY_URL + 'get-user-answers/',
             headers: { Authorization: JSON.parse(localStorage.getItem('token')) },
             data: {},
         }
