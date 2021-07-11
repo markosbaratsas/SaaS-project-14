@@ -22,7 +22,6 @@ export default function SignBox(props) {
                 else if(response.data.message) alert(response.data.message);
                 else if(response.data.success){
                     console.log(response);
-                    setAuthTokens(response.data["token"]);
                     alert(response.data.success);
                     setLoggedIn(true);
                 }
