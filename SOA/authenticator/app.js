@@ -4,9 +4,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors')
 
-var usersRouter = require('./routes/users');
-
 var app = express();
+app.use(cors())
+
+var usersRouter = require('./routes/users');
 
 // view engine setup
 app.engine('pug', require('pug').__express)
@@ -18,7 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors())
 
 app.use('/', usersRouter);
 // catch 404 and forward to error handler
