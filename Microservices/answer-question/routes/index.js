@@ -21,7 +21,6 @@ passport.use('token', new JWTStrategy(
     }
 ));
 
-
 router.post('/answer-question/',
     passport.authenticate('token', { session: false }),
     async function(req, res, next) {
@@ -47,7 +46,7 @@ router.post('/answer-question/',
                     } else {
                         let details = {
                             method: 'post',
-                            url: 'http://localhost:3003/bus/',
+                            url: process.env.CHOREOGRAPHER_URL,
                             data: {
                                 'event': {
                                     'id': results.rows[0]['id'],

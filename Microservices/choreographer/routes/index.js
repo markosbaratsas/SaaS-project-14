@@ -3,8 +3,8 @@ var router = express.Router();
 const axios = require('axios');
 
 const pool = require('redis-connection-pool')('myRedisPool', {
-      url: REDIS_URL
-      port: REDIS_PORT,
+      url: process.env.REDIS_URL,
+      maxclients: 19
     }
 );
 
@@ -34,6 +34,8 @@ router.post('/bus', async(req, res) => {
         pool.hset('bus', 'messages', JSON.stringify(currentMessages), () => {
             pool.hget('subscribers', channel, (err, data) => {
                 let subscribers = JSON.parse(data);
+                console.log("subscribers");
+                console.log(subscribers);
 
                 for(let i = 0; i < subscribers.length; i++) {
                     console.log("Informing: " + subscribers[i]);

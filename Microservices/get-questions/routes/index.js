@@ -5,7 +5,7 @@ require("dotenv").config();
 const { pool } = require("../config/database");
 
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        url: REDIS_URL
+        url: process.env.REDIS_URL
     }
 );
 

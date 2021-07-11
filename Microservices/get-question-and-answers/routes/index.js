@@ -4,8 +4,7 @@ var router = express.Router();
 const { pool } = require("../config/database");
 
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
+        url: process.env.REDIS_URL
     }
 );
 
@@ -122,6 +121,8 @@ router.get('/get-question-and-answers/:id',
 router.post('/bus', (req, res) => {
     let event = req.body.event;
     let channel = req.body.channel;
+    console.log(channel);
+    console.log(event);
     if (channel == "create-question") {
         let keywords = event['keywords'] ? event['keywords'] : [];
         console.log(keywords);
@@ -191,7 +192,10 @@ router.post('/bus', (req, res) => {
                             }
                         )
                     }
-                    if (keywords_added) res.json({ results: "Successfully added question with title: " + String(results.rows[0]['title']) });
+                    if (keywords_added) {
+                        console.log("all good!")
+                        res.json({ results: "Successfully added question with title: " + String(results.rows[0]['title']) });
+                    }
                     else {
                         res.status(400);
                         return res.json({ error: "Something went wrong..." });

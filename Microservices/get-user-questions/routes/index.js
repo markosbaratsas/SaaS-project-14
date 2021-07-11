@@ -8,8 +8,7 @@ const ExtractJWT = require('passport-jwt').ExtractJwt;
 const { pool } = require("../config/database");
 
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
+        url: process.env.REDIS_URL
     }
 );
 

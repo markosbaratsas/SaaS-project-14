@@ -114,7 +114,7 @@ router.post('/create-question/',
                                         //SEND REQUEST TO CHOREOGRAPHER
                                         let details = {
                                             method: 'post',
-                                            url: 'http://localhost:3003/bus/',
+                                            url: process.env.CHOREOGRAPHER_URL,
                                             data: {
                                                 'event': {
                                                     'id': question_id,

@@ -8,8 +8,7 @@ const ExtractJWT = require('passport-jwt').ExtractJwt;
 const { pool } = require("../config/database");
 
 const redis_pool = require('redis-connection-pool')('myRedisPool', {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
+        url: process.env.REDIS_URL
     }
 );
 
@@ -90,6 +89,8 @@ router.post('/bus', (req, res) => {
     let event = req.body.event;
     let channel = req.body.channel;
     console.log("here")
+    console.log("event")
+    console.log(event)
 
     if(channel === "answer-question") {
         let answer_text = event['answer_text'];
