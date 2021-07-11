@@ -259,7 +259,7 @@ router.post('/get-questions-per-keyword/',
         let array = req.body['user_id'] ? [req.body['user_id']] : []
         pool.query(
             `SELECT  count(*), k.Keyword FROM Keyword_question as kq, keyword as k, question as q
-                                         WHERE k.id = kq.KeywordID` + user_string + `
+                                         WHERE k.id = kq.KeywordID AND q.id = kq.questionID` + user_string + `
                                          GROUP BY k.Keyword
                                          ORDER BY count(*) DESC`,
             array,
