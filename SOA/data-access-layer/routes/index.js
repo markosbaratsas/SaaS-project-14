@@ -177,8 +177,9 @@ router.get('/get-question-and-answers/:id',
                                                         let answers = [];
                                                         for( let i = 0; i < results.rows.length; i++){
                                                             answers.push({ answer_text: results.rows[i]['answertext'], date_answered: results.rows[i]['dateanswered'].toISOString().replace(/T/, ' ').replace(/\..+/, ''), user: results.rows[i]['email']})
+                                                            if(i === results.rows.length - 1) return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Keywords: keywords, Answers: answers } )
                                                         }
-                                                        return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Keywords: keywords, Answers: answers } )
+                                                        if(results.rows.length === 0) return res.json( { id: question_id, title: title, QuestionText: question_text, DateAsked: date_asked, UserID: { email: user_email}, Keywords: keywords, Answers: answers } )
                                                     }
                                                 }
                                             )
@@ -301,6 +302,7 @@ router.post('/get-questions-per-period/',
                         else answer.push({ date: period[i], count: 0 })
                         if(i === period.length - 1) return res.json( { questions_per_period: answer });
                     }
+                    if(period.length === 0) return res.json( { questions_per_period: answer });
                 }
             }
         )
@@ -333,6 +335,7 @@ router.post('/get-answers-per-period/',
                         else answer.push({ date: period[i], count: 0 })
                         if(i === period.length - 1) return res.json( { answers_per_period: answer });
                     }
+                    if(period.length === 0) return res.json( { questions_per_period: answer });
                 }
             }
         )
